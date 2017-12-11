@@ -6,7 +6,7 @@ package hwj.opencvjni;
 
 public class OpenCVHelper {
     static {
-        System.loadLibrary("my-lib");
+        //System.loadLibrary("my-lib");
     }
 
     public static native String getStringTmp();

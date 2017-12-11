@@ -4,17 +4,17 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
     defaultConfig {
-        applicationId "hwj.opencvjni"
+        applicationId "com.lrkj.ctrl"
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
-        externalNativeBuild {
-            cmake {
-                cppFlags "-std=c++11 -frtti -fexceptions"
-                abiFilters 'armeabi', 'armeabi-v7a'
-            }
-        }
+//        externalNativeBuild {
+//            cmake {
+//                cppFlags "-std=c++11 -frtti -fexceptions"
+//                abiFilters 'armeabi', 'armeabi-v7a'
+//            }
+//        }
     }
     buildTypes {
         release {
@@ -22,15 +22,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    externalNativeBuild {
-        cmake {
-            path "CMakeLists.txt"
-        }
-    }
+//    externalNativeBuild {
+//        cmake {
+//            path "CMakeLists.txt"
+//        }
+//    }
     sourceSets{
         main{
             // let gradle pack the shared library into apk
-            jniLibs.srcDirs = ['src/main/OpenCVLib']
+            //jniLibs.srcDirs = ['src/main/OpenCVLib']
         }
     }
 
@@ -41,6 +41,8 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile project(':openCVLibrary2411')
+    compile 'com.android.support:appcompat-v7:25.0.0'
+    compile 'com.android.support:design:25.0.0'
+    //compile project(':openCVLibrary2411')
+
 }
