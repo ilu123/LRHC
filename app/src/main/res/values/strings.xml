@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">OpenCVJNI</string>
+    <string name="app_name">LRKJ</string>
+
+    <string name="dialog_ip_hint">请输入IP地址</string>
+    <string name="dialog_ip_btn_conn">开始连接</string>
+    <string name="dialog_ip_status">连接中</string>
+    <string name="dialog_ip_status2">请稍后......</string>
 </resources>

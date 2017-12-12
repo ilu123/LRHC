@@ -8,11 +8,14 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,26 +36,16 @@ public class LrIpDialog extends DialogFragment {
 
     }
 
-    LinearLayout power, reboot, soft_reboot, recovery, bootloader, safemode;
     FrameLayout frame, frame2;
     private CircularRevealView revealView;
     private View selectedView;
     private int backgroundColor;
     ProgressBar progress;
-    TextView status, status_detail;
-
-    private static final String SHUTDOWN_BROADCAST
-            = "am broadcast android.intent.action.ACTION_SHUTDOWN";
-    private static final String SHUTDOWN = "reboot -p";
-    private static final String REBOOT_CMD = "reboot";
-    private static final String REBOOT_SOFT_REBOOT_CMD = "setprop ctl.restart zygote";
-    private static final String REBOOT_RECOVERY_CMD = "reboot recovery";
-    private static final String REBOOT_BOOTLOADER_CMD = "reboot bootloader";
-    private static final String[] REBOOT_SAFE_MODE
-            = new String[]{"setprop persist.sys.safemode 1", REBOOT_SOFT_REBOOT_CMD};
+    EditText etIp;
+    Button btnConnect;
 
     private static final int BG_PRIO = android.os.Process.THREAD_PRIORITY_BACKGROUND;
-    private static final int RUNNABLE_DELAY_MS = 1000;
+    private static final int RUNNABLE_DELAY_MS = 3000;
 
 
     @Override
@@ -60,30 +53,20 @@ public class LrIpDialog extends DialogFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ip, container, false);
 
-
         revealView = (CircularRevealView) view.findViewById(R.id.reveal);
         backgroundColor = Color.parseColor("#ffffff");
-        power = (LinearLayout) view.findViewById(R.id.power);
-        reboot = (LinearLayout) view.findViewById(R.id.reboot);
-        soft_reboot = (LinearLayout) view.findViewById(R.id.soft_reboot);
-        recovery = (LinearLayout) view.findViewById(R.id.recovery);
-        bootloader = (LinearLayout) view.findViewById(R.id.bootloader);
-        safemode = (LinearLayout) view.findViewById(R.id.safemode);
 
         frame = (FrameLayout) view.findViewById(R.id.frame);
         frame2 = (FrameLayout) view.findViewById(R.id.frame2);
 
-        status = (TextView) view.findViewById(R.id.status);
-        status_detail = (TextView) view.findViewById(R.id.status_detail);
-
         progress = (ProgressBar) view.findViewById(R.id.progress);
-
-
         progress.getIndeterminateDrawable().setColorFilter(
                 Color.parseColor("#ffffff"),
                 android.graphics.PorterDuff.Mode.SRC_IN);
 
-        power.setOnClickListener(new View.OnClickListener() {
+        btnConnect = (Button) view.findViewById(R.id.btn_connect);
+        etIp = (EditText) view.findViewById(R.id.et_ip);
+        btnConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final int color = Color.parseColor("#d32f2f");
@@ -101,41 +84,47 @@ public class LrIpDialog extends DialogFragment {
                 frame.setVisibility(View.GONE);
                 frame2.setVisibility(View.VISIBLE);
 
-                status.setText("Power Off");
-                status_detail.setText("Shutting down...");
-
-                new BackgroundThread(SHUTDOWN).start();
+                new BackgroundThread(new Handler(Looper.getMainLooper()){
+                    @Override
+                    public void handleMessage(Message msg) {
+                        super.handleMessage(msg);
+                        if (msg.what == 0xD1) {
+                            LrIpDialog.this.dismiss();
+                        }
+                    }
+                }).start();
 
 
             }
         });
 
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-
-        TextDrawable drawable1 = TextDrawable.builder()
-                .buildRound("P", Color.parseColor("#d32f2f"));
-        ((ImageView) view.findViewById(R.id.ipower)).setImageDrawable(drawable1);
-
-        TextDrawable drawable2 = TextDrawable.builder()
-                .buildRound("S", Color.parseColor("#009688"));
-        ((ImageView) view.findViewById(R.id.isafe)).setImageDrawable(drawable2);
-
-        TextDrawable drawable3 = TextDrawable.builder()
-                .buildRound("B", Color.parseColor("#009688"));
-        ((ImageView) view.findViewById(R.id.ibootloader)).setImageDrawable(drawable3);
-
-        TextDrawable drawable4 = TextDrawable.builder()
-                .buildRound("R", Color.parseColor("#009688"));
-        ((ImageView) view.findViewById(R.id.irecovery)).setImageDrawable(drawable4);
-
-        TextDrawable drawable5 = TextDrawable.builder()
-                .buildRound("S", Color.parseColor("#e91e63"));
-        ((ImageView) view.findViewById(R.id.isoftreboot)).setImageDrawable(drawable5);
-
-        TextDrawable drawable6 = TextDrawable.builder()
-                .buildRound("R", Color.parseColor("#3f51b5"));
-        ((ImageView) view.findViewById(R.id.ireboot)).setImageDrawable(drawable6);
-
+        this.setCancelable(false);
+//
+//        TextDrawable drawable1 = TextDrawable.builder()
+//                .buildRound("P", Color.parseColor("#d32f2f"));
+//        ((ImageView) view.findViewById(R.id.ipower)).setImageDrawable(drawable1);
+//
+//        TextDrawable drawable2 = TextDrawable.builder()
+//                .buildRound("S", Color.parseColor("#009688"));
+//        ((ImageView) view.findViewById(R.id.isafe)).setImageDrawable(drawable2);
+//
+//        TextDrawable drawable3 = TextDrawable.builder()
+//                .buildRound("B", Color.parseColor("#009688"));
+//        ((ImageView) view.findViewById(R.id.ibootloader)).setImageDrawable(drawable3);
+//
+//        TextDrawable drawable4 = TextDrawable.builder()
+//                .buildRound("R", Color.parseColor("#009688"));
+//        ((ImageView) view.findViewById(R.id.irecovery)).setImageDrawable(drawable4);
+//
+//        TextDrawable drawable5 = TextDrawable.builder()
+//                .buildRound("S", Color.parseColor("#e91e63"));
+//        ((ImageView) view.findViewById(R.id.isoftreboot)).setImageDrawable(drawable5);
+//
+//        TextDrawable drawable6 = TextDrawable.builder()
+//                .buildRound("R", Color.parseColor("#3f51b5"));
+//        ((ImageView) view.findViewById(R.id.ireboot)).setImageDrawable(drawable6);
+//
 
         return view;
 
@@ -146,10 +135,10 @@ public class LrIpDialog extends DialogFragment {
     }
 
     private static class BackgroundThread extends Thread {
-        private Object sCmd;
+        private Handler mHandler;
 
-        private BackgroundThread(Object cmd) {
-            this.sCmd = cmd;
+        private BackgroundThread(Handler cmd) {
+            this.mHandler = cmd;
         }
 
         @Override
@@ -157,24 +146,14 @@ public class LrIpDialog extends DialogFragment {
             super.run();
             setThreadPrio(BG_PRIO);
 
-            if (sCmd == null)
-                return;
-
             /**
              * Sending a system broadcast to notify apps and the system that we're going down
              * so that they write any outstanding data that might need to be flushed
              */
             //Shell.SU.run(SHUTDOWN_BROADCAST);
 
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                @Override
-                public void run() {
-//                    if (sCmd instanceof String)
-//                        Shell.SU.run((String) sCmd);
-//                    else if (sCmd instanceof String[])
-//                        Shell.SU.run((String[]) sCmd);
-                }
-            }, RUNNABLE_DELAY_MS);
+            this.mHandler.sendEmptyMessageDelayed(0xD1, RUNNABLE_DELAY_MS);
+            this.mHandler = null;
         }
     }
 
