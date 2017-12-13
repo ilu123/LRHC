@@ -5,10 +5,13 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup.LayoutParams;
 
+import org.opencv.android.Utils;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -24,9 +27,9 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
     private boolean mStopThread;
     private Thread mThread;
 
-    private String mIp;
-    private int mPort;
-    private int mCmd = -1;
+    private volatile String mIp;
+    private volatile int mPort;
+    private volatile int mCmd = -1;
     protected Socket mSocket;
     protected NativeCameraFrame mFrame;
 
@@ -104,13 +107,13 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
             mFrame = new NativeCameraFrame();
 
             java.util.List<Size> sizes = new ArrayList<>();
-            sizes.add(new Size(width, height));
+            sizes.add(new Size(100, 100));
 
             /* Select the size that fits surface considering maximum size allowed */
             Size frameSize = calculateCameraFrameSize(sizes, new OpenCvSizeAccessor(), width, height);
 
-            mFrameWidth = (int)frameSize.width;
-            mFrameHeight = (int)frameSize.height;
+            mFrameWidth = 100; //(int)frameSize.width;
+            mFrameHeight = 100; //(int)frameSize.height;
 
             if ((getLayoutParams().width == LayoutParams.MATCH_PARENT) && (getLayoutParams().height == LayoutParams.MATCH_PARENT))
                 mScale = Math.min(((float)height)/mFrameHeight, ((float)width)/mFrameWidth);
@@ -148,7 +151,7 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
         }
 
         public NativeCameraFrame() {
-            mRgba = new Mat();
+            mRgba = new Mat(100, 100, CvType.CV_8UC3);
         }
 
         public void release() {
@@ -165,8 +168,9 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
 //            StrictMode.setThreadPolicy(policy);
             InputStream input = null;
             OutputStream output = null;
-            int MAX_SIZE = 100*100*3;
+            int MAX_SIZE = (int) (mFrame.mRgba.total() * mFrame.mRgba.elemSize());
             byte[] buffer = new byte[MAX_SIZE];
+            Arrays.fill(buffer, (byte) 0xFF);
             int readLen = 0;
             try{
                 do {
@@ -187,11 +191,12 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
                     if (mCmd == 1) {
                         Arrays.fill(buffer, (byte) 0xFF);
                     }
+
                     mFrame.mRgba.put(0, 0, buffer);
                     deliverAndDrawFrame(mFrame);
                 } while (!mStopThread);
             }catch (Throwable e) {
-
+                Log.e("", e+"");
             }finally {
                 try {
                     if (mSocket != null) {

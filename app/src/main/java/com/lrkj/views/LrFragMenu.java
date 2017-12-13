@@ -56,7 +56,7 @@ public class LrFragMenu extends Fragment {
             public void itemClick(View view, int pos) {
                 if (pos == 0) {
                     Intent i = new Intent(getActivity(), LrActMakeMap.class);
-                    i.putExtra("ip", "127.0.0.1");
+                    i.putExtra("ip", "192.168.100.177");
                     i.putExtra("port", 8234);
                     getActivity().startActivity(i);
                 }

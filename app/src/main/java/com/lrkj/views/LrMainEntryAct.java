@@ -28,7 +28,9 @@ public class LrMainEntryAct extends Activity implements DialogInterface.OnDismis
     Handler handler;
     int maxX, maxY;
 
-
+    protected void onSaveInstanceState(Bundle outState) {
+        //No call for super(). Bug on API Level > 11.
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +77,7 @@ public class LrMainEntryAct extends Activity implements DialogInterface.OnDismis
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.fragment_container, new LrFragMenu());
-        ft.commit();
+        ft.commitAllowingStateLoss();
         final int color = Color.parseColor("#ffffff");
         final Point p = new Point(maxX / 2, maxY / 2);
         handler = new Handler();
@@ -85,7 +87,6 @@ public class LrMainEntryAct extends Activity implements DialogInterface.OnDismis
                 revealView.hide(p.x, p.y, backgroundColor, 0, 330, null);
             }
         }, 300);
-
     }
 
     public void revealFromTop() {

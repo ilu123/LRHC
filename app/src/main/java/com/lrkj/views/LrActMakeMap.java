@@ -40,8 +40,8 @@ public class LrActMakeMap extends Activity implements LrSocketBridgeViewBase.CvC
         setContentView(R.layout.activity_make_map);
 
         mCameraVideo = (LrSocketSurfaceView) findViewById(R.id.camera_video);
-        mCameraVideo.setupSocketIpAndPort(getIntent().getStringExtra("ip"), getIntent().getIntExtra("port", 0));
-
+        //mCameraVideo.setupSocketIpAndPort(getIntent().getStringExtra("ip"), getIntent().getIntExtra("port", 0));
+        mCameraVideo.setupSocketIpAndPort("192.168.100.177", 8234);
         mCameraVideo.setVisibility(SurfaceView.VISIBLE);
 
         mCameraVideo.setCvCameraViewListener(this);
@@ -59,7 +59,8 @@ public class LrActMakeMap extends Activity implements LrSocketBridgeViewBase.CvC
     public void onResume()
     {
         super.onResume();
-
+        if (mCameraVideo != null)
+            mCameraVideo.enableView();
     }
 
     public void onDestroy() {
