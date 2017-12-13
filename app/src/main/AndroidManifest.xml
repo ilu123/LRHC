@@ -11,6 +11,12 @@
         <activity
             android:name="com.lrkj.views.LrMainEntryAct"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
+
+        </activity>
+        <activity android:name="hwj.opencvjni.MainActivity"></activity>
+        <activity
+            android:name="com.lrkj.views.LrActMakeMap"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

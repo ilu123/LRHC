@@ -9,12 +9,12 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
-//        externalNativeBuild {
-//            cmake {
-//                cppFlags "-std=c++11 -frtti -fexceptions"
-//                abiFilters 'armeabi', 'armeabi-v7a'
-//            }
-//        }
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++11 -frtti -fexceptions"
+                abiFilters 'armeabi', 'armeabi-v7a', 'x86'
+            }
+        }
     }
     buildTypes {
         release {
@@ -22,15 +22,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-//    externalNativeBuild {
-//        cmake {
-//            path "CMakeLists.txt"
-//        }
-//    }
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
     sourceSets{
         main{
             // let gradle pack the shared library into apk
-            //jniLibs.srcDirs = ['src/main/OpenCVLib']
+            jniLibs.srcDirs = ['src/main/OpenCVLib']
         }
     }
 
@@ -43,6 +43,6 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:25.0.0'
     compile 'com.android.support:design:25.0.0'
-    //compile project(':openCVLibrary2411')
+    compile project(':openCVLibrary2411')
 
 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -31,12 +32,11 @@ public class LrFragMenu extends Fragment {
 
     private CircleMenuLayout mCircleMenuLayout;
 
-    private String[] mItemTexts = new String[] { "安全中心 ", "特色服务", "投资理财",
-            "转账汇款", "我的账户", "信用卡" };
-    private int[] mItemImgs = new int[] { R.drawable.home_mbank_1_normal,
+    private String[] mItemTexts = new String[]{"创建地图", "地图导航", "管理地图",
+            "进程管理"};
+    private int[] mItemImgs = new int[]{R.drawable.home_mbank_1_normal,
             R.drawable.home_mbank_2_normal, R.drawable.home_mbank_3_normal,
-            R.drawable.home_mbank_4_normal, R.drawable.home_mbank_5_normal,
-            R.drawable.home_mbank_6_normal };
+            R.drawable.home_mbank_4_normal};
 
     private CircularRevealView revealView;
 
@@ -50,18 +50,20 @@ public class LrFragMenu extends Fragment {
 
         mCircleMenuLayout = (CircleMenuLayout) view.findViewById(R.id.id_menulayout);
         mCircleMenuLayout.setMenuItemIconsAndTexts(mItemImgs, mItemTexts);
-        mCircleMenuLayout.setOnMenuItemClickListener(new CircleMenuLayout.OnMenuItemClickListener()
-        {
+        mCircleMenuLayout.setOnMenuItemClickListener(new CircleMenuLayout.OnMenuItemClickListener() {
 
             @Override
-            public void itemClick(View view, int pos)
-            {
-
+            public void itemClick(View view, int pos) {
+                if (pos == 0) {
+                    Intent i = new Intent(getActivity(), LrActMakeMap.class);
+                    i.putExtra("ip", "127.0.0.1");
+                    i.putExtra("port", 8234);
+                    getActivity().startActivity(i);
+                }
             }
 
             @Override
-            public void itemCenterClick(View view)
-            {
+            public void itemCenterClick(View view) {
 
             }
         });

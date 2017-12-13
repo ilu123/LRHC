@@ -46,7 +46,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
     protected int mMaxHeight;
     protected int mMaxWidth;
     protected float mScale = 0;
-    protected int mPreviewFormat = Highgui.CV_CAP_ANDROID_COLOR_FRAME_RGBA;
+    protected int mPreviewFormat = Highgui.CV_CAP_ANDROID_COLOR_FRAME_RGB;
     protected int mCameraIndex = CAMERA_ID_ANY;
     protected boolean mEnabled;
     protected FpsMeter mFpsMeter = null;
@@ -135,7 +135,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
         public Mat onCameraFrame(CvCameraViewFrame inputFrame);
     };
 
-    protected class CvCameraViewListenerAdapter implements CvCameraViewListener2  {
+    public class CvCameraViewListenerAdapter implements CvCameraViewListener2  {
         public CvCameraViewListenerAdapter(CvCameraViewListener oldStypeListener) {
             mOldStyleListener = oldStypeListener;
         }
@@ -151,7 +151,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
         public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
              Mat result = null;
              switch (mPreviewFormat) {
-                case Highgui.CV_CAP_ANDROID_COLOR_FRAME_RGBA:
+                case Highgui.CV_CAP_ANDROID_COLOR_FRAME_RGB:
                     result = mOldStyleListener.onCameraFrame(inputFrame.rgba());
                     break;
                 case Highgui.CV_CAP_ANDROID_GREY_FRAME:
@@ -168,7 +168,7 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
             mPreviewFormat = format;
         }
 
-        private int mPreviewFormat = Highgui.CV_CAP_ANDROID_COLOR_FRAME_RGBA;
+        private int mPreviewFormat = Highgui.CV_CAP_ANDROID_COLOR_FRAME_RGB;
         private CvCameraViewListener mOldStyleListener;
     };
 
