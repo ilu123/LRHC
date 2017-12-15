@@ -8,7 +8,11 @@ import android.view.ViewGroup.LayoutParams;
 import org.opencv.android.Utils;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfByte;
 import org.opencv.core.Size;
+import org.opencv.highgui.Highgui;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.utils.Converters;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -104,16 +108,17 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
 
     private boolean initializeCamera(int width, int height) {
         synchronized (this) {
-            mFrame = new NativeCameraFrame();
-
             java.util.List<Size> sizes = new ArrayList<>();
             sizes.add(new Size(100, 100));
 
             /* Select the size that fits surface considering maximum size allowed */
             Size frameSize = calculateCameraFrameSize(sizes, new OpenCvSizeAccessor(), width, height);
 
-            mFrameWidth = 100; //(int)frameSize.width;
-            mFrameHeight = 100; //(int)frameSize.height;
+            mFrameWidth = (int)frameSize.width;
+            mFrameHeight = (int)frameSize.height;
+
+            mFrame = new NativeCameraFrame(mFrameWidth, mFrameHeight);
+
 
             if ((getLayoutParams().width == LayoutParams.MATCH_PARENT) && (getLayoutParams().height == LayoutParams.MATCH_PARENT))
                 mScale = Math.min(((float)height)/mFrameHeight, ((float)width)/mFrameWidth);
@@ -150,8 +155,8 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
             return null;
         }
 
-        public NativeCameraFrame() {
-            mRgba = new Mat(100, 100, CvType.CV_8UC3);
+        public NativeCameraFrame(int w, int h) {
+            mRgba = new Mat(w, h, CvType.CV_8UC3);
         }
 
         public void release() {
@@ -168,7 +173,8 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
 //            StrictMode.setThreadPolicy(policy);
             InputStream input = null;
             OutputStream output = null;
-            int MAX_SIZE = (int) (mFrame.mRgba.total() * mFrame.mRgba.elemSize());
+            Mat originImg = new Mat(100, 100, CvType.CV_8UC3);
+            int MAX_SIZE = (int) (originImg.total() * originImg.elemSize());
             byte[] buffer = new byte[MAX_SIZE];
             Arrays.fill(buffer, (byte) 0xFF);
             int readLen = 0;
@@ -177,6 +183,7 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
                     if (mSocket == null) {
                         if (mIp != null) {
                             mSocket = new Socket();
+                            mSocket.setReceiveBufferSize(MAX_SIZE);
                             mSocket.setReuseAddress(true);
                             mSocket.connect(new InetSocketAddress(mIp, mPort));
                             input = mSocket.getInputStream();
@@ -184,7 +191,12 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
                         }
                     }else{
                         readLen = input.read(buffer, 0, MAX_SIZE);
+                        Log.d(TAG, "run: ----------["+readLen+"]");
                         if (readLen > 0) {
+                            originImg.put(0, 0, buffer);
+                            originImg = Highgui.imdecode(originImg, Highgui.CV_LOAD_IMAGE_COLOR);
+                            Log.d(TAG, "run SHAPe: ----------["+originImg.channels()+"]");
+                            Imgproc.cvtColor(originImg, mFrame.mRgba, Imgproc.COLOR_BGR2RGB);
                             output.write(mCmd);
                         }
                     }
@@ -192,7 +204,6 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
                         Arrays.fill(buffer, (byte) 0xFF);
                     }
 
-                    mFrame.mRgba.put(0, 0, buffer);
                     deliverAndDrawFrame(mFrame);
                 } while (!mStopThread);
             }catch (Throwable e) {

@@ -49,8 +49,6 @@ public abstract class LrSocketBridgeViewBase extends SurfaceView implements Surf
     protected FpsMeter mFpsMeter = null;
 
     public static final int CAMERA_ID_ANY   = -1;
-    public static final int CAMERA_ID_BACK  = 99;
-    public static final int CAMERA_ID_FRONT = 98;
 
     public LrSocketBridgeViewBase(Context context, int cameraId) {
         super(context);

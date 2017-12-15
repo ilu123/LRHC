@@ -3,174 +3,174 @@
 
     <item
         is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/25.0.0/jars/libs/internal_impl-25.0.0.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="e5343c9d19cb19ff55f6b268c7f3fe8c9d224f6f">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.0_e8ab6f998e3fff19b31d5e3527f38618ea34e8e0.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/support-v4/25.0.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/com.android.support-support-v4-25.0.0_842d34b1e1396ed7c917ecfc0c8759a78f6ce675.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="8bc45ce1f63d1a391fd38b32a201be5a42f9c95d">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/com.android.support-appcompat-v7-25.0.0_8a6efe02ffc6ffc4e9131162f179a907b146be39.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/25.0.0/jars/libs/internal_impl-25.0.0.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="665d21a8a069c96b4d9e8b434f5096d865b4e261">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.0_409febc5672f9bb9ad1730782bc5aed58440f55e.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/exploded-aar/OpenCV2411AS/openCVLibrary2411/unspecified/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="535e3b792e713166caa37f2961f759683ab4139f">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/OpenCV2411AS-openCVLibrary2411-unspecified_01ac77b11a7062a68761378d36d78eb170a51c43.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/support-fragment/25.0.0/jars/libs/internal_impl-25.0.0.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="ee5faf4dee5b6a4364bf51587871047dde7c703a">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.0_74296efcbc44c759a705c9f9752ff2430f09d0d2.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/25.0.0/jars/libs/internal_impl-25.0.0.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="3b61a70884adaf0be3fc06c70c801e3e6df13133">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.0_bb719ab1fcf63d6ea75fa6159ff657e6b09d661f.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/transition/25.0.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="0c6d948e6cb9ea6f535d175fb61ba2930719c0e9">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/com.android.support-transition-25.0.0_11d60c49120d535b166f5d6e95af51bf926e6f90.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/support-compat/25.0.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="75b1f366ff0bbc78f8b1f7cf0dc82e7c53afef6a">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/com.android.support-support-compat-25.0.0_9f8cfc4b010b801cab2ba20b5ef5d75801d153e2.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/25.0.0/jars/classes.jar"
+        jar="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\exploded-aar\com.android.support\support-core-utils\25.0.0\jars\classes.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.3"
         sha1="4ccbcda5c72027c7f7c14be9ff8640d9cb0d8da0">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/com.android.support-support-core-utils-25.0.0_d6c1f731aa2b98b9d0f1db8758d01d08d61e334d.jar" />
+        <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\release\com.android.support-support-core-utils-25.0.0_fd38222bff95f7a236fbb71473d0f7fde46c60eb.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/25.0.0/jars/classes.jar"
+        jar="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\exploded-aar\com.android.support\transition\25.0.0\jars\classes.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.3"
-        sha1="76fb65a4b41ea42dab8a1310ed772a2420c96b52">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/com.android.support-support-media-compat-25.0.0_12cf98275973e854d16e67ea36815357172aacab.jar" />
+        sha1="0c6d948e6cb9ea6f535d175fb61ba2930719c0e9">
+        <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\release\com.android.support-transition-25.0.0_2530c25f0b72e8fab79570ef2b4031b5cca45b5f.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/25.0.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="26674000177e45447a0326a6ad84612761199a13">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/com.android.support-support-core-ui-25.0.0_915a2cd4e04aeb8c56ffa4d53252d3cb2145db3f.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/25.0.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="5e497d60f0cb6ce87c458ac5420a46d0fed49bd0">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/com.android.support-recyclerview-v7-25.0.0_79dcfb1a57d530044c903baf9bb0e6c2c6e050cd.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/support-compat/25.0.0/jars/libs/internal_impl-25.0.0.jar"
+        jar="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\exploded-aar\com.android.support\support-compat\25.0.0\jars\libs\internal_impl-25.0.0.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.3"
         sha1="f2e3b9bc1ec25f652e8007ce7774c991e38f6a00">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.0_c4f78821484a8b27e0ea8ab01a91a73582adb870.jar" />
+        <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\release\internal_impl-25.0.0_a7a0e90fff546966d13154bc9b7fc18fa8a20f68.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/design/25.0.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="26384be22ddc74cfe197ebda9edbc7d1fd8bd537">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/com.android.support-design-25.0.0_63395819566c46411591cc4557eb9bc6f45cbd5b.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/support-fragment/25.0.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="07daa0b6e1d455c82a38422ffe287c18823d339a">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/com.android.support-support-fragment-25.0.0_d9771b1289802c9507979ceab5cd4fa6a425cb36.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/stevejobs/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/25.0.0/support-annotations-25.0.0.jar"
+        jar="C:\Users\tianbao.zhao\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\25.0.0\support-annotations-25.0.0.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.3"
         sha1="a22d2cc94da87b254451fa8ed28afc30b4653773">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/support-annotations-25.0.0_96f557892134bbdb5662d0b6fa70b4ee5774ffc0.jar" />
+        <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\release\support-annotations-25.0.0_cdba0c83ea4baa51152465beb382fa12f630a0d7.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/25.0.0/jars/classes.jar"
+        jar="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\exploded-aar\com.android.support\animated-vector-drawable\25.0.0\jars\classes.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.3"
         sha1="53a420cd4f49274db6bd43475f8006ba67ef6bbd">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/com.android.support-animated-vector-drawable-25.0.0_8436b754e420bf98ef47d1b61829996e8cf1c812.jar" />
+        <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\release\com.android.support-animated-vector-drawable-25.0.0_5832b94b65678749c0af0c8a20bdc1405e2d9194.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/25.0.0/jars/classes.jar"
+        jar="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\25.0.0\jars\classes.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.3"
         sha1="d29714cc76b38157e3cbd034c66e1ec808eb4c19">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/AI_Map/01.Source/02_App/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/com.android.support-support-vector-drawable-25.0.0_b6b062f5d442e72812fc04fe96672df949b6670e.jar" />
+        <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\release\com.android.support-support-vector-drawable-25.0.0_0b461f42af768537501e466f86545ce18967dc54.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\exploded-aar\com.android.support\support-fragment\25.0.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="07daa0b6e1d455c82a38422ffe287c18823d339a">
+        <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\release\com.android.support-support-fragment-25.0.0_5e0c96958fbb476008b4472d791e4acc460fffe2.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\25.0.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="5e497d60f0cb6ce87c458ac5420a46d0fed49bd0">
+        <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\release\com.android.support-recyclerview-v7-25.0.0_83c2543e2b567f414343db63bf4a1a68697b7b98.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\exploded-aar\com.android.support\support-fragment\25.0.0\jars\libs\internal_impl-25.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="ee5faf4dee5b6a4364bf51587871047dde7c703a">
+        <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\release\internal_impl-25.0.0_ff5991cf66ef293e6681aa400ed67585b138e371.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\exploded-aar\com.android.support\design\25.0.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="26384be22ddc74cfe197ebda9edbc7d1fd8bd537">
+        <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\release\com.android.support-design-25.0.0_0395bbd9955cdd0a38b1b6abc6d46b65014c3d3c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\exploded-aar\com.android.support\support-core-ui\25.0.0\jars\libs\internal_impl-25.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="e5343c9d19cb19ff55f6b268c7f3fe8c9d224f6f">
+        <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\release\internal_impl-25.0.0_583c6e9af5fa67513028c7a68d85332e011464bf.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\25.0.0\jars\libs\internal_impl-25.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="665d21a8a069c96b4d9e8b434f5096d865b4e261">
+        <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\release\internal_impl-25.0.0_ac4f17498323cf48a513019ceb6a52a8ecf7b851.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\exploded-aar\com.android.support\support-compat\25.0.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="75b1f366ff0bbc78f8b1f7cf0dc82e7c53afef6a">
+        <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\release\com.android.support-support-compat-25.0.0_01a73e7f9180951df091b371554985ac69e5f152.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\exploded-aar\OpenCV2411AS\openCVLibrary2411\unspecified\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="e0642e25c60de103997efd43f484cfb1cf21bd00">
+        <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\release\OpenCV2411AS-openCVLibrary2411-unspecified_0f4692a9e0e5d80cea629a6dd812bf1e35644301.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\exploded-aar\com.android.support\support-core-ui\25.0.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="26674000177e45447a0326a6ad84612761199a13">
+        <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\release\com.android.support-support-core-ui-25.0.0_d9e9f632f8b3a9d67d0159b71d7be3fd79567d41.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\exploded-aar\com.android.support\support-core-utils\25.0.0\jars\libs\internal_impl-25.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="3b61a70884adaf0be3fc06c70c801e3e6df13133">
+        <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\release\internal_impl-25.0.0_fbd824ac189370108ca5bb5826cd36ca5ee51fe5.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\25.0.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="8bc45ce1f63d1a391fd38b32a201be5a42f9c95d">
+        <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\release\com.android.support-appcompat-v7-25.0.0_5a798f986cea59d87d95e47d5259d8ea0c0a8742.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\25.0.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="76fb65a4b41ea42dab8a1310ed772a2420c96b52">
+        <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\release\com.android.support-support-media-compat-25.0.0_1d2936bc444289872bc4223779fe180ef09628e5.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\exploded-aar\com.android.support\support-v4\25.0.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\release\com.android.support-support-v4-25.0.0_d9bd3fb16f70cd19865d2ebbf31d930e26c7a1e6.jar" />
     </item>
 
 </items>
