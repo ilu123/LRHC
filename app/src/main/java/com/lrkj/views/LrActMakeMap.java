@@ -23,7 +23,7 @@ import com.lrkj.utils.LrSocketSurfaceView;
 public class LrActMakeMap extends Activity implements LrSocketBridgeViewBase.CvCameraViewListener2 {
     private static final String TAG = "LrActMakeMap::Activity";
 
-    private LrSocketSurfaceView mCameraVideo;
+    private LrSocketSurfaceView mCameraVideo, mCameraDot;
 
     public LrActMakeMap() {
         Log.i(TAG, "Instantiated new " + this.getClass());
@@ -40,12 +40,16 @@ public class LrActMakeMap extends Activity implements LrSocketBridgeViewBase.CvC
         setContentView(R.layout.activity_make_map);
 
         mCameraVideo = (LrSocketSurfaceView) findViewById(R.id.camera_video);
-        //mCameraVideo.setupSocketIpAndPort(getIntent().getStringExtra("ip"), getIntent().getIntExtra("port", 0));
+        mCameraDot = (LrSocketSurfaceView) findViewById(R.id.camera_dot);
+        //mCameraVideo.setupSocketIpAndPort(getIntent().getStringExtra("ip"));
         //mCameraVideo.setupSocketIpAndPort("192.168.100.177", 8234);
         mCameraVideo.setupSocketIpAndPort("10.0.2.2", 8234);
+        mCameraDot.setupSocketIpAndPort("10.0.2.2", 8234);
         mCameraVideo.setVisibility(SurfaceView.VISIBLE);
+        mCameraDot.setVisibility(SurfaceView.VISIBLE);
 
         mCameraVideo.setCvCameraViewListener(this);
+        mCameraDot.setCvCameraViewListener(this);
     }
 
     @Override
@@ -54,6 +58,8 @@ public class LrActMakeMap extends Activity implements LrSocketBridgeViewBase.CvC
         super.onPause();
         if (mCameraVideo != null)
             mCameraVideo.disableView();
+        if (mCameraDot != null)
+            mCameraDot.disableView();
     }
 
     @Override
@@ -62,12 +68,16 @@ public class LrActMakeMap extends Activity implements LrSocketBridgeViewBase.CvC
         super.onResume();
         if (mCameraVideo != null)
             mCameraVideo.enableView();
+        if (mCameraDot != null)
+            mCameraDot.enableView();
     }
 
     public void onDestroy() {
         super.onDestroy();
         if (mCameraVideo != null)
             mCameraVideo.disableView();
+        if (mCameraDot != null)
+            mCameraDot.disableView();
     }
 
     @Override

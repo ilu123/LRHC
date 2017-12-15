@@ -6,11 +6,18 @@
     android:layout_height="match_parent">
 
     <com.lrkj.utils.LrSocketSurfaceView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:visibility="gone"
         android:id="@+id/camera_video"
         opencv:show_fps="false"
         opencv:camera_id="any" />
 
+    <com.lrkj.utils.LrSocketSurfaceView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:visibility="gone"
+        android:id="@+id/camera_dot"
+        opencv:show_fps="false"
+        opencv:camera_id="any" />
 </LinearLayout>

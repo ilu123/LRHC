@@ -109,7 +109,7 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
     private boolean initializeCamera(int width, int height) {
         synchronized (this) {
             java.util.List<Size> sizes = new ArrayList<>();
-            sizes.add(new Size(100, 100));
+            sizes.add(new Size(width, width));
 
             /* Select the size that fits surface considering maximum size allowed */
             Size frameSize = calculateCameraFrameSize(sizes, new OpenCvSizeAccessor(), width, height);
@@ -194,9 +194,10 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
                         Log.d(TAG, "run: ----------["+readLen+"]");
                         if (readLen > 0) {
                             originImg.put(0, 0, buffer);
-                            originImg = Highgui.imdecode(originImg, Highgui.CV_LOAD_IMAGE_COLOR);
-                            Log.d(TAG, "run SHAPe: ----------["+originImg.channels()+"]");
-                            Imgproc.cvtColor(originImg, mFrame.mRgba, Imgproc.COLOR_BGR2RGB);
+                            Mat tmp = Highgui.imdecode(originImg, Highgui.CV_LOAD_IMAGE_COLOR);
+                            Log.d(TAG, "run SHAPe: ----------["+tmp.channels()+"]");
+                            Imgproc.cvtColor(tmp, originImg, Imgproc.COLOR_BGR2RGB);
+                            Imgproc.resize(originImg, mFrame.mRgba, mFrame.mRgba.size());
                             output.write(mCmd);
                         }
                     }

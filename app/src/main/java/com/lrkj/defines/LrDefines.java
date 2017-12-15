@@ -7,7 +7,7 @@ package com.lrkj.defines;
 public class LrDefines {
     public static final int PORT_MAPS = 4101;
     public static final int PORT_COMMANDS = 4103;
-    public static final int PORT_READ_VIDEO = 4096;
     public static final int PORT_NAVIGATION = 4104;
+    public static final int PORT_READ_VIDEO = 4096;
     public static final int PORT_DOT = 4097;
 }
