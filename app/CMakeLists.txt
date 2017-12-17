@@ -1,9 +1,14 @@
 # cmake version
 cmake_minimum_required(VERSION 3.4.1)
 
+
+#引入log android库
+find_library(android-lib android)
+
 # 支持 -std=gnu++11
 set(CMAKE_VERBOSE_MAKEFILE on)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
+set(CMAKE_ANDROID_STL_TYPE gnustl_static)
 
 # opencv import libs
 set(pathToOpenCV ./../OpenCV-2.4.11-android-sdk)
@@ -13,7 +18,7 @@ add_library( lib_opencv SHARED IMPORTED )
 set_target_properties( lib_opencv PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/src/main/OpenCVLib/${ANDROID_ABI}/libopencv_java.so )
 
 
-add_library( my-lib SHARED ${CMAKE_SOURCE_DIR}/src/main/jni/MyLib.cpp )
+add_library( my-lib SHARED ${CMAKE_SOURCE_DIR}/src/main/jni/MyLib.cpp ${CMAKE_SOURCE_DIR}/src/main/jni/navigation.cpp)
 
 find_library( log-lib log )
 

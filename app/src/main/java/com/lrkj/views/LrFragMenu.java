@@ -10,6 +10,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +21,16 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lrkj.ctrl.R;
+import com.lrkj.utils.LrToast;
 import com.lrkj.widget.CircleMenuLayout;
 import com.lrkj.widget.CircularRevealView;
+
+import hwj.opencvjni.MainActivity;
+
+import static android.R.id.input;
 
 /**
  * Created by ztb.
@@ -33,7 +40,7 @@ public class LrFragMenu extends Fragment {
     private CircleMenuLayout mCircleMenuLayout;
 
     private String[] mItemTexts = new String[]{"创建地图", "地图导航", "管理地图",
-            "进程管理"};
+            "系统管理"};
     private int[] mItemImgs = new int[]{R.drawable.home_mbank_1_normal,
             R.drawable.home_mbank_2_normal, R.drawable.home_mbank_3_normal,
             R.drawable.home_mbank_4_normal};
@@ -55,10 +62,11 @@ public class LrFragMenu extends Fragment {
             @Override
             public void itemClick(View view, int pos) {
                 if (pos == 0) {
-                    Intent i = new Intent(getActivity(), LrActMakeMap.class);
-                    i.putExtra("ip", "192.168.100.177");
-                    i.putExtra("port", 8234);
-                    getActivity().startActivity(i);
+                    showInputMapNameDialog();
+                }else if (pos == 1 || pos == 2) {
+                    ((LrMainEntryAct)getActivity()).gotoAllMaps();
+                }else if (pos == 3) {
+                    ((LrMainEntryAct)getActivity()).gotoSystem();
                 }
             }
 
@@ -129,5 +137,24 @@ public class LrFragMenu extends Fragment {
     }
 
 
+    private void showInputMapNameDialog() {
+        final EditText et = new EditText(getActivity());
+        new AlertDialog.Builder(getActivity()).setTitle("输入地图名称")
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setView(et)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String input = et.getText().toString().trim();
+                        if (input.equals("")) {
+                            LrToast.toast("不能为空！", getActivity());
+                        }
+                        else {
+                            ((LrMainEntryAct)getActivity()).gotoMapActivity(input);
+                        }
+                    }
+                })
+                .setNegativeButton("取消", null)
+                .show();
+    }
 }
 

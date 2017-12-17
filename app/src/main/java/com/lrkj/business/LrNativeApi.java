@@ -9,7 +9,12 @@ public class LrNativeApi {
         System.loadLibrary("my-lib");
     }
 
-    public static native String getStringTmp();
+    //public static native String getStringTmp();
 
-    public static native int[] getGrayImage(int[] pixels, int w, int h);
+    //public static native int[] getGrayImage(int[] pixels, int w, int h);
+
+    public static native void setRobotIp(String ip);
+
+    public static native int getAllMaps();
+
 }

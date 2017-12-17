@@ -5,4 +5,14 @@
     <string name="dialog_ip_btn_conn">开始连接</string>
     <string name="dialog_ip_status">连接中</string>
     <string name="dialog_ip_status2">请稍后......</string>
+    <string name="btn_reset">重置</string>
+    <string name="btn_finish_map">完成建图</string>
+    <string name="btn_save_map">保存</string>
+    <string name="btn_exit_map">退出</string>
+    <string name="btn_navi_finish">结束任务</string>
+    <string name="btn_navi_close">关闭返回</string>
+    <string name="btn_sys_shutdown">机器关机</string>
+    <string name="btn_sys_reboot">机器重启</string>
+    <string name="btn_sys_kill">关闭进程</string>
+    <string name="btn_sys_check">检查更新</string>
 </resources>

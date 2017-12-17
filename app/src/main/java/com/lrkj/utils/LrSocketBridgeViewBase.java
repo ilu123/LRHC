@@ -15,6 +15,7 @@ import android.view.SurfaceView;
 
 import org.opencv.android.FpsMeter;
 import org.opencv.android.Utils;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.highgui.Highgui;
@@ -441,7 +442,7 @@ public abstract class LrSocketBridgeViewBase extends SurfaceView implements Surf
     protected abstract void disconnectCamera();
 
     // NOTE: On Android 4.1.x the function must be called before SurfaceTextre constructor!
-    protected void AllocateCache()
+    protected void AllocateCache(int type)
     {
         mCacheBitmap = Bitmap.createBitmap(mFrameWidth, mFrameHeight, Bitmap.Config.RGB_565);
     }

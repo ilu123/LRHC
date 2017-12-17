@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="48dp">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:src="@android:color/darker_gray"
+        />
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.4"
+        android:text="111"
+        android:textSize="13sp"
+        android:textColor="#000"
+        android:gravity="center_vertical"/>
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.4"
+        android:text="111"
+        android:textSize="13sp"
+        android:textColor="#000"
+        android:gravity="center_vertical"/>
+
+    <Button
+        android:id="@+id/btn_del"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:textSize="10sp"
+        android:text="删除"/>
+    <Button
+        android:id="@+id/btn_edit"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:textSize="10sp"
+        android:text="编辑"/>
+    <Button
+        android:id="@+id/btn_upload"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:textSize="10sp"
+        android:text="上传"/>
+    <Button
+        android:id="@+id/btn_nav"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:textSize="10sp"
+        android:text="导航"/>
+</LinearLayout>

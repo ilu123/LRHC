@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:opencv="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/holo_blue_dark"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <FrameLayout
+        android:id="@+id/frame_dot"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_alignLeft="@+id/center_view"
+        android:layout_margin="30dp"
+        android:layout_weight="0.7"
+        android:background="#0f0"
+        android:clickable="true"
+        android:focusableInTouchMode="true">
+
+        <com.lrkj.utils.LrSocketSurfaceView
+            android:id="@+id/camera_navi"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusableInTouchMode="true"
+            android:visibility="gone"
+            opencv:camera_id="4104"
+            opencv:show_fps="false" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_finish"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:onClick="onClickBtn"
+            android:text="@string/btn_navi_finish"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/btn_close"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="30dp"
+            android:onClick="onClickBtn"
+            android:text="@string/btn_navi_close"
+            android:textSize="12sp" />
+    </LinearLayout>
+</LinearLayout>

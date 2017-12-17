@@ -1,26 +1,33 @@
 package com.lrkj.utils;
 
 import android.content.Context;
+import android.os.StrictMode;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 
-import org.opencv.android.Utils;
+import com.lrkj.ctrl.R;
+import com.lrkj.defines.LrDefines;
+
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
+import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
-import org.opencv.utils.Converters;
 
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import static org.opencv.ml.CvSVM.P;
+
 
 /**
  * Created by tianbao.zhao on 2017/12/13.
@@ -73,17 +80,35 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
 
     @Override
     protected void disconnectCamera() {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        if (this.mSocket != null) {
+            try {
+                this.mSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        this.mSocket = null;
+
         /* 1. We need to stop thread which updating the frames
          * 2. Stop camera and release it
          */
         if (mThread != null) {
             try {
                 mStopThread = true;
+                if(mCameraIndex == LrDefines.PORT_DOT) {
+                    stopDotSocket();
+                }else if (mCameraIndex == LrDefines.PORT_READ_LASER) {
+                    stopLaserSocket();
+                }else if (mCameraIndex == LrDefines.PORT_NAVIGATION) {
+                    stopNaviSocket();
+                }
                 mThread.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } finally {
-                mThread =  null;
+                mThread = null;
                 mStopThread = false;
             }
         }
@@ -92,16 +117,26 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
         releaseCamera();
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            int x = (int) event.getX();
+            int y = (int) event.getY();
+            clickNaviTo(x, y);
+        }
+        return super.onTouchEvent(event);
+    }
+
     public static class OpenCvSizeAccessor implements ListItemAccessor {
 
         public int getWidth(Object obj) {
-            Size size  = (Size)obj;
-            return (int)size.width;
+            Size size = (Size) obj;
+            return (int) size.width;
         }
 
         public int getHeight(Object obj) {
-            Size size  = (Size)obj;
-            return (int)size.height;
+            Size size = (Size) obj;
+            return (int) size.height;
         }
 
     }
@@ -109,19 +144,26 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
     private boolean initializeCamera(int width, int height) {
         synchronized (this) {
             java.util.List<Size> sizes = new ArrayList<>();
-            sizes.add(new Size(width, width));
+            sizes.add(new Size(width, height));
 
             /* Select the size that fits surface considering maximum size allowed */
             Size frameSize = calculateCameraFrameSize(sizes, new OpenCvSizeAccessor(), width, height);
 
-            mFrameWidth = (int)frameSize.width;
-            mFrameHeight = (int)frameSize.height;
+            mFrameWidth = (int) frameSize.width;
+            mFrameHeight = (int) frameSize.height;
 
-            mFrame = new NativeCameraFrame(mFrameWidth, mFrameHeight);
-
+            int type = CvType.CV_8UC3;
+            if(mCameraIndex == LrDefines.PORT_DOT) {
+                type = CvType.CV_8UC3;
+            }else if (mCameraIndex == LrDefines.PORT_READ_LASER) {
+                type = CvType.CV_8UC1;
+            }else if (mCameraIndex == LrDefines.PORT_NAVIGATION) {
+                type = CvType.CV_8UC1;
+            }
+            mFrame = new NativeCameraFrame(mFrameWidth, mFrameHeight, type);
 
             if ((getLayoutParams().width == LayoutParams.MATCH_PARENT) && (getLayoutParams().height == LayoutParams.MATCH_PARENT))
-                mScale = Math.min(((float)height)/mFrameHeight, ((float)width)/mFrameWidth);
+                mScale = Math.min(((float) height) / mFrameHeight, ((float) width) / mFrameWidth);
             else
                 mScale = 0;
 
@@ -129,7 +171,7 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
                 mFpsMeter.setResolution(mFrameWidth, mFrameHeight);
             }
 
-            AllocateCache();
+            AllocateCache(type);
         }
 
         Log.i(TAG, "Selected camera frame size = (" + mFrameWidth + ", " + mFrameHeight + ")");
@@ -140,6 +182,9 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
     private void releaseCamera() {
         synchronized (this) {
             if (mFrame != null) mFrame.release();
+            if (originImg != null) originImg.release();
+            mFrame = null;
+            originImg = null;
         }
     }
 
@@ -155,8 +200,8 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
             return null;
         }
 
-        public NativeCameraFrame(int w, int h) {
-            mRgba = new Mat(w, h, CvType.CV_8UC3);
+        public NativeCameraFrame(int w, int h, int type) {
+            mRgba = new Mat(w, h, type);
         }
 
         public void release() {
@@ -164,66 +209,166 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
         }
 
         private Mat mRgba;
-    };
+    }
+
+    private Mat originImg = null;
 
     private class CameraWorker implements Runnable {
-
         public void run() {
 //            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 //            StrictMode.setThreadPolicy(policy);
             InputStream input = null;
             OutputStream output = null;
-            Mat originImg = new Mat(100, 100, CvType.CV_8UC3);
-            int MAX_SIZE = (int) (originImg.total() * originImg.elemSize());
-            byte[] buffer = new byte[MAX_SIZE];
-            Arrays.fill(buffer, (byte) 0xFF);
-            int readLen = 0;
-            try{
-                do {
-                    if (mSocket == null) {
-                        if (mIp != null) {
-                            mSocket = new Socket();
-                            mSocket.setReceiveBufferSize(MAX_SIZE);
-                            mSocket.setReuseAddress(true);
-                            mSocket.connect(new InetSocketAddress(mIp, mPort));
-                            input = mSocket.getInputStream();
-                            output = mSocket.getOutputStream();
-                        }
-                    }else{
-                        readLen = input.read(buffer, 0, MAX_SIZE);
-                        Log.d(TAG, "run: ----------["+readLen+"]");
-                        if (readLen > 0) {
-                            originImg.put(0, 0, buffer);
-                            Mat tmp = Highgui.imdecode(originImg, Highgui.CV_LOAD_IMAGE_COLOR);
-                            Log.d(TAG, "run SHAPe: ----------["+tmp.channels()+"]");
-                            Imgproc.cvtColor(tmp, originImg, Imgproc.COLOR_BGR2RGB);
-                            Imgproc.resize(originImg, mFrame.mRgba, mFrame.mRgba.size());
-                            output.write(mCmd);
-                        }
-                    }
-                    if (mCmd == 1) {
-                        Arrays.fill(buffer, (byte) 0xFF);
-                    }
+            if (mCameraIndex == LrDefines.PORT_DOT) {
+                originImg = new Mat(600, 600, CvType.CV_8UC3);
+                originImg.setTo(Scalar.all(128));
+                try {
+                    getDotFrame(LrSocketSurfaceView.this, originImg.getNativeObjAddr());
+                } catch (Throwable e) {
 
-                    deliverAndDrawFrame(mFrame);
-                } while (!mStopThread);
-            }catch (Throwable e) {
-                Log.e("", e+"");
-            }finally {
+                }
+            } else if(mCameraIndex == LrDefines.PORT_READ_LASER) {
+                originImg = mFrame.mRgba.clone();
                 try {
-                    if (mSocket != null) {
-                        mSocket.shutdownInput();
-                    }
-                }catch (Throwable e) {}
+                    getLaserFrame(LrSocketSurfaceView.this, originImg.getNativeObjAddr());
+                } catch (Throwable e) {
+
+                }
+            } else if(mCameraIndex == LrDefines.PORT_NAVIGATION) {
+                originImg = mFrame.mRgba.clone();
                 try {
-                    if (mSocket != null) {
-                        mSocket.shutdownOutput();
+                    getNaviFrame(LrSocketSurfaceView.this, mIp, originImg.getNativeObjAddr());
+                } catch (Throwable e) {
+
+                }
+            }
+
+            else {
+                originImg = new Mat(100, 100, CvType.CV_8UC3);
+                originImg.setTo(Scalar.all(128));
+                int MAX_SIZE = (int) (originImg.total() * originImg.elemSize());
+                byte[] buffer = new byte[MAX_SIZE];
+                Arrays.fill(buffer, (byte) 0xFF);
+                int readLen = 0;
+                try {
+                    do {
+                        if (mSocket == null) {
+                            if (mIp != null) {
+                                try {
+                                    mSocket = new Socket();
+                                    mSocket.setReceiveBufferSize(MAX_SIZE);
+                                    mSocket.setReuseAddress(true);
+                                    mSocket.connect(new InetSocketAddress(mIp, mPort));
+                                    input = mSocket.getInputStream();
+                                    output = mSocket.getOutputStream();
+                                } catch (Throwable e) {
+                                    mSocket = null;
+                                } finally {
+                                    try {
+                                        if (mSocket != null) {
+                                            mSocket.shutdownInput();
+                                        }
+                                    } catch (Throwable e) {
+                                    }
+                                    try {
+                                        if (mSocket != null) {
+                                            mSocket.shutdownOutput();
+                                        }
+                                    } catch (Throwable e) {
+                                    }
+                                    output = null;
+                                    input = null;
+                                }
+                            }
+                        } else {
+                            try {
+                                readLen = input.read(buffer, 0, MAX_SIZE);
+                                Log.d(TAG, "run: ----------[" + readLen + "]");
+                                if (readLen > 0) {
+                                    originImg.put(0, 0, buffer);
+                                    Mat tmp = Highgui.imdecode(originImg, Highgui.CV_LOAD_IMAGE_COLOR);
+                                    Log.d(TAG, "run SHAPe: ----------[" + tmp.channels() + "]");
+                                    Imgproc.cvtColor(tmp, originImg, Imgproc.COLOR_BGR2RGB);
+                                    Imgproc.resize(originImg, mFrame.mRgba, mFrame.mRgba.size());
+                                }
+                            } catch (Throwable e) {
+                            }
+                        }
+
+                        if (mCmd == 1) {
+                            Arrays.fill(buffer, (byte) 0xFF);
+                        }
+                        try {
+                            output.write(mCmd);
+                        } catch (Throwable e) {
+                        }
+
+                        mCmd = -1; // just send cmd once!!!
+
+                        deliverAndDrawFrame(mFrame);
+                    } while (!mStopThread);
+
+                } catch (Throwable e) {
+                    Log.e("", e + "");
+                } finally {
+                    try {
+                        if (mSocket != null) {
+                            mSocket.shutdownInput();
+                        }
+                    } catch (Throwable e) {
                     }
-                }catch (Throwable e) {}
-                output = null;
-                input = null;
+                    try {
+                        if (mSocket != null) {
+                            mSocket.shutdownOutput();
+                        }
+                    } catch (Throwable e) {
+                    }
+                    output = null;
+                    input = null;
+                    if (originImg != null) {
+                        originImg.release();
+                        originImg = null;
+                    }
+                }
             }
         }
     }
 
+
+    ////// All Native calls ////////
+
+    public void postDotFrameFromNative() {
+        Mat tmp = Highgui.imdecode(originImg, Highgui.CV_LOAD_IMAGE_COLOR);
+        Log.d(TAG, "run SHAPe: ----------[" + tmp.channels() + "]");
+        Imgproc.cvtColor(tmp, originImg, Imgproc.COLOR_BGR2RGB);
+        Imgproc.resize(originImg, mFrame.mRgba, mFrame.mRgba.size());
+        deliverAndDrawFrame(mFrame);
+        tmp.release();
+    }
+
+    public void postLaserFrameFromNative() {
+        Mat tmp = Highgui.imdecode(originImg, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+        Log.d(TAG, "run SHAPe: ----------[" + tmp.channels() + "]");
+        //Imgproc.cvtColor(tmp, originImg, Imgproc.COLOR_Gr);
+        Imgproc.resize(originImg, mFrame.mRgba, mFrame.mRgba.size());
+        deliverAndDrawFrame(mFrame);
+        tmp.release();
+    }
+
+    public void postNaviFrameFromNative() {
+        Mat tmp = Highgui.imdecode(originImg, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+        Log.d(TAG, "run SHAPe: ----------[" + tmp.channels() + "]");
+        //Imgproc.cvtColor(tmp, originImg, Imgproc.COLOR_Gr);
+        Imgproc.resize(originImg, mFrame.mRgba, mFrame.mRgba.size());
+        deliverAndDrawFrame(mFrame);
+        tmp.release();
+    }
+
+    public static native boolean getDotFrame(LrSocketSurfaceView obj, long ioMat);
+    public static native void stopDotSocket();
+    public static native boolean getLaserFrame(LrSocketSurfaceView obj, long ioMat);
+    public static native void stopLaserSocket();
+    public static native boolean getNaviFrame(LrSocketSurfaceView obj, String ip, long ioMat);
+    public static native void stopNaviSocket();
+    public static native void clickNaviTo(int x, int y);
 }

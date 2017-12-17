@@ -22,10 +22,14 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.lrkj.business.LrRobot;
 import com.lrkj.ctrl.R;
+import com.lrkj.defines.LrDefines;
 import com.lrkj.views.LrMainEntryAct;
 import com.lrkj.widget.CircularRevealView;
 import com.lrkj.widget.TextDrawable;
+
+import static com.lrkj.business.LrRobot.getRobot;
 
 /**
  * Created by ztb.
@@ -38,7 +42,6 @@ public class LrIpDialog extends DialogFragment {
 
     FrameLayout frame, frame2;
     private CircularRevealView revealView;
-    private View selectedView;
     private int backgroundColor;
     ProgressBar progress;
     EditText etIp;
@@ -66,21 +69,16 @@ public class LrIpDialog extends DialogFragment {
 
         btnConnect = (Button) view.findViewById(R.id.btn_connect);
         etIp = (EditText) view.findViewById(R.id.et_ip);
+        etIp.setText("192.168.100.177");
         btnConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final int color = Color.parseColor("#d32f2f");
+                final int color = Color.parseColor(LrDefines.COLOR_IP_DIALOG_THEME);
                 final Point p = getLocationInView(revealView, v);
+                final int h2 = v.getHeight() / 2;
 
-                if (selectedView == v) {
-                    revealView.hide(p.x, p.y, backgroundColor, 0, 330, null);
-                    selectedView = null;
-                } else {
-                    revealView.reveal(p.x / 2, p.y / 2, color, v.getHeight() / 2, 440, null);
-                    selectedView = v;
-                }
-
-                ((LrMainEntryAct) getActivity()).revealFromTop();
+                revealView.reveal(p.x / 2, p.y / 2, color, h2, 440, null);
+                ((LrMainEntryAct) getActivity()).revealFromTop("#ffffff");
                 frame.setVisibility(View.GONE);
                 frame2.setVisibility(View.VISIBLE);
 
@@ -88,11 +86,16 @@ public class LrIpDialog extends DialogFragment {
                     @Override
                     public void handleMessage(Message msg) {
                         super.handleMessage(msg);
-                        if (msg.what == 0xD1) {
+                        if (msg.what == 100) {
                             LrIpDialog.this.dismiss();
+                        }else if (msg.what == -100){
+                            revealView.hide(p.x, p.y, backgroundColor, 0, 330, null);
+                            ((LrMainEntryAct) getActivity()).revealFromTop(LrDefines.COLOR_MAIN_THEME);
+                            frame.setVisibility(View.VISIBLE);
+                            frame2.setVisibility(View.GONE);
                         }
                     }
-                }).start();
+                }, etIp.getText().toString().trim()).start();
 
 
             }
@@ -130,15 +133,21 @@ public class LrIpDialog extends DialogFragment {
 
     }
 
+    public String getIp() {
+        return etIp.getText().toString().trim();
+    }
+
     private static void setThreadPrio(int prio) {
         android.os.Process.setThreadPriority(prio);
     }
 
     private static class BackgroundThread extends Thread {
         private Handler mHandler;
+        private String mIp;
 
-        private BackgroundThread(Handler cmd) {
+        private BackgroundThread(Handler cmd, String ip) {
             this.mHandler = cmd;
+            this.mIp = ip;
         }
 
         @Override
@@ -146,13 +155,9 @@ public class LrIpDialog extends DialogFragment {
             super.run();
             setThreadPrio(BG_PRIO);
 
-            /**
-             * Sending a system broadcast to notify apps and the system that we're going down
-             * so that they write any outstanding data that might need to be flushed
-             */
-            //Shell.SU.run(SHUTDOWN_BROADCAST);
+            int result = LrRobot.getRobot(mIp).isConnected() ? 100 : -100;
 
-            this.mHandler.sendEmptyMessageDelayed(0xD1, RUNNABLE_DELAY_MS);
+            this.mHandler.sendEmptyMessageDelayed(result, RUNNABLE_DELAY_MS);
             this.mHandler = null;
         }
     }
