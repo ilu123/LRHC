@@ -31,6 +31,7 @@ import com.lrkj.utils.LrToast;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import static android.R.attr.switchMinWidth;
 import static android.R.attr.x;
@@ -127,7 +128,7 @@ public class LrActMakeMap extends Activity implements LrSocketBridgeViewBase.CvC
                     while (!mStopThread) {
                         try {
                             if (skt.getInputStream().read(buff, 0, 4) == -1) continue;
-                            slamstate = buff[3];
+                            slamstate = buff[0];
                         }catch (Throwable e) {
                             continue;
                         }
@@ -147,7 +148,7 @@ public class LrActMakeMap extends Activity implements LrSocketBridgeViewBase.CvC
                         }
 
                         try {
-                            byte[] cmd = ByteBuffer.allocate(4).putInt(mCmd).array();
+                            byte[] cmd = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(mCmd).array();
                             skt.getOutputStream().write(cmd);
                             skt.getOutputStream().flush();
                         }catch (Throwable e) {
