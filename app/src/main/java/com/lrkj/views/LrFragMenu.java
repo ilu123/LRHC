@@ -64,7 +64,7 @@ public class LrFragMenu extends Fragment {
                 if (pos == 0) {
                     showInputMapNameDialog();
                 }else if (pos == 1 || pos == 2) {
-                    ((LrMainEntryAct)getActivity()).gotoAllMaps();
+                    ((LrMainEntryAct)getActivity()).gotoAllMaps(pos == 1);
                 }else if (pos == 3) {
                     ((LrMainEntryAct)getActivity()).gotoSystem();
                 }

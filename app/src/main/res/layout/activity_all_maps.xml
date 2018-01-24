@@ -82,7 +82,7 @@
             android:textSize="13sp" />
 
         <TextView
-            android:layout_width="120dp"
+            android:layout_width="160dp"
             android:layout_height="match_parent"
             android:background="@android:color/holo_orange_dark"
             android:gravity="center"

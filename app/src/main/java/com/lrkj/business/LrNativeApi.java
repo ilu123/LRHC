@@ -17,4 +17,8 @@ public class LrNativeApi {
 
     public static native int getAllMaps();
 
+    public static native int sendEditMap(String name, String mapPath);
+
+    public static native boolean writeBitmapToPgm(String path, int[] pixels, int w, int h);
+
 }
