@@ -68,6 +68,7 @@
         <activity
             android:name="com.lrkj.views.LrActSystem"
             android:configChanges="orientation"></activity>
+        <service android:name="com.lrkj.LrMsgService" />
     </application>
 
 </manifest>

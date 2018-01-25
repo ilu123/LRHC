@@ -261,7 +261,7 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
                     }
                 }
             } else if(mCameraIndex == LrDefines.PORT_NAVIGATION) {
-                Mat originImg2 = Highgui.imread("/mnt/sdcard/com.lrkj.ctrl/maps/"+mMapName+".pgm");
+                Mat originImg2 = Highgui.imread("/mnt/sdcard/com.lrkj.ctrl/navi/"+mMapName+".pgm");
                 AllocateCache(originImg2.cols(), originImg2.rows(), CvType.CV_8UC1);
                 originImg = originImg2.clone();
                 //while (!mStopThread) {

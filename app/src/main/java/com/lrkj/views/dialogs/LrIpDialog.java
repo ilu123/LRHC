@@ -48,7 +48,7 @@ public class LrIpDialog extends DialogFragment {
     Button btnConnect;
 
     private static final int BG_PRIO = android.os.Process.THREAD_PRIORITY_BACKGROUND;
-    private static final int RUNNABLE_DELAY_MS = 6000;
+    private static final int RUNNABLE_DELAY_MS = 2000;
 
 
     @Override

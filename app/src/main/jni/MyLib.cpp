@@ -410,7 +410,7 @@ JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_stopLaserSocket
 // Ge all maps
 
 JNIEXPORT jint JNICALL Java_com_lrkj_business_LrNativeApi_getAllMaps
-        (JNIEnv *env, jclass clazz)
+        (JNIEnv *env, jclass clazz, jint mode)
 {
     int sokt = -1;
     try {
@@ -498,10 +498,21 @@ JNIEXPORT jint JNICALL Java_com_lrkj_business_LrNativeApi_getAllMaps
                 cv::resize(img, img2, ResImgSiz);
 
                 //保存到本地
-                cv::imwrite(string("/mnt/sdcard/com.lrkj.ctrl/maps/") + string(mapName) + ".pgm",
+                if (mode == 0) {
+                    cv::imwrite(
+                            string("/mnt/sdcard/com.lrkj.ctrl/maps/") + string(mapName) + ".pgm",
                             img);
-                cv::imwrite(string("/mnt/sdcard/com.lrkj.ctrl/maps/") + string(mapName) + ".jpg",
-                        img2);
+                    cv::imwrite(
+                            string("/mnt/sdcard/com.lrkj.ctrl/maps/") + string(mapName) + ".jpg",
+                            img2);
+                }else if (mode == 1) {
+                    cv::imwrite(
+                            string("/mnt/sdcard/com.lrkj.ctrl/navi/") + string(mapName) + ".pgm",
+                            img);
+                    cv::imwrite(
+                            string("/mnt/sdcard/com.lrkj.ctrl/navi/") + string(mapName) + ".jpg",
+                            img2);
+                }
             }
         }
         if (sokt >= 0) {

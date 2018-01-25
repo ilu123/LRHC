@@ -38,12 +38,21 @@ android {
     lintOptions {
         abortOnError false
     }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile (name:'opencv-2411', ext:'aar')
     compile 'com.android.support:appcompat-v7:25.0.0'
     compile 'com.android.support:design:25.0.0'
-    compile (name:'opencv-2411', ext:'aar')
     compile 'com.github.gittjy:LoadingDialog:1.0.2'
+    compile 'info.hoang8f:fbutton:1.0.5'
+    compile 'com.github.johnkil.android-appmsg:appmsg:1.2.0'
+
 }

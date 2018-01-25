@@ -28,10 +28,6 @@ import com.lrkj.utils.LrToast;
 import com.lrkj.widget.CircleMenuLayout;
 import com.lrkj.widget.CircularRevealView;
 
-import hwj.opencvjni.MainActivity;
-
-import static android.R.id.input;
-
 /**
  * Created by ztb.
  */

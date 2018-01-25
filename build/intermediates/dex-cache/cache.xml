@@ -39,6 +39,15 @@
     </item>
     <item
         is-multidex="false"
+        jar="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\exploded-aar\com.github.johnkil.android-appmsg\appmsg\1.2.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="398ec51345409df9e36a1de1a81f2b3ad5234bfb">
+        <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\debug\com.github.johnkil.android-appmsg-appmsg-1.2.0_a359cbc943c40de9d5d34f0f2a5ba55c311775f9.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\libs\httpmime-4.1.2.jar"
         jumboMode="false"
         optimize="true"
@@ -90,6 +99,15 @@
         revision="25.0.3"
         sha1="45f697922e6f072daa12f8a2995dc77ab03c11da">
         <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\debug\com.android.support-support-media-compat-25.3.1_3d5157adab735d268e00d082ad6ea22113741528.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\exploded-aar\info.hoang8f\fbutton\1.0.5\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="2c12397a785c3b1868fbebeffc9553457b27803f">
+        <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\debug\info.hoang8f-fbutton-1.0.5_d8d9dd501fcd598ebfe9603ae2826379136bea27.jar" />
     </item>
     <item
         is-multidex="false"
@@ -147,12 +165,12 @@
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\exploded-aar\OpenCV2411AS\openCVLibrary2411\unspecified\jars\classes.jar"
+        jar="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\exploded-aar\opencv-2411\jars\classes.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.3"
         sha1="e0642e25c60de103997efd43f484cfb1cf21bd00">
-        <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\debug\OpenCV2411AS-openCVLibrary2411-unspecified_0f4692a9e0e5d80cea629a6dd812bf1e35644301.jar" />
+        <dex dex="C:\Users\tianbao.zhao\Documents\ZtbFiles\LRHC\OpenCV2411AS\app\build\intermediates\pre-dexed\debug\intermediates-exploded-aar-opencv-2411_13d2062f6a57d0c18aabbdbb5cd7c703563981ec.jar" />
     </item>
     <item
         is-multidex="false"

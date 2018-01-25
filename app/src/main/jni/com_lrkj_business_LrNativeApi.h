@@ -53,7 +53,7 @@ JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_stopNaviSocket
 
 // Map
 JNIEXPORT jint JNICALL Java_com_lrkj_business_LrNativeApi_getAllMaps
-        (JNIEnv *, jclass);
+        (JNIEnv *, jclass, jint);
 
 JNIEXPORT jint JNICALL Java_com_lrkj_business_LrNativeApi_sendEditMap
         (JNIEnv *env, jclass clazz, jstring name, jstring mapPath);

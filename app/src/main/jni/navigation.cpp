@@ -148,20 +148,11 @@ JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getNaviFrame
 
     const char *ip = jstringToChars(env, ipS);
     const char *mapName = jstringToChars(env, mapname);
-    string navMapFile = (string("/mnt/sdcard/com.lrkj.ctrl/maps/") + string(mapName) + string(".pgm"));
+    string navMapFile = (string("/mnt/sdcard/com.lrkj.ctrl/navi/") + string(mapName) + string(".pgm"));
 
     cv::Mat img = (*((cv::Mat *) matMap));
     cv::Mat ioImg = (*((cv::Mat *) ioMat));
     cv::Size ResImgSiz = cv::Size(ioImg.cols, ioImg.rows);
-
-
-    // Tests
-    //cv::circle(ioImg, cv::Point(5, 5), 16, cv::Scalar(255), -1, CV_AA);
-    //cv::resize(img, ioImg, ResImgSiz);
-//    jmethodID mid = env->GetMethodID(clazz, "postNaviFrameFromNative", "()V");
-//    env->CallVoidMethod(obj, mid);
-//    return;
-    // Test end
 
     ////////// get map info
     //read Map  读取地图信息 ：  宽度， 高度 ， 原点， 分辨率（默认为0.025米/像素）

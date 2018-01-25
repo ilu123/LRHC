@@ -15,7 +15,7 @@ public class LrNativeApi {
 
     public static native void setRobotIp(String ip);
 
-    public static native int getAllMaps();
+    public static native int getAllMaps(int mode);
 
     public static native int sendEditMap(String name, String mapPath);
 

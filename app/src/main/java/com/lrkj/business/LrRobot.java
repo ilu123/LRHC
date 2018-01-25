@@ -127,8 +127,8 @@ public class LrRobot {
                 byte[] buff = new byte[1024];
                 if ((len = mSocket.getInputStream().read(buff)) == -1) {
                     ok = false;
-                    LrToast.toast(String.format("ACK: %s", new String(buff)));
                 } else {
+                    LrToast.toast(String.format("ACK: %s", new String(buff)));
                     ok = true;
                 }
             }else {
@@ -139,7 +139,7 @@ public class LrRobot {
             ok = false;
             LrToast.toast("命令发送失败！");
         } finally {
-            while (mSocket != null && mSocket.isConnected()) {
+            while (mSocket != null || mSocket.isConnected()) {
                 if (mSocket != null) {
                     try {
                         try {

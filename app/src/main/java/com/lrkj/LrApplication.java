@@ -1,9 +1,12 @@
 package com.lrkj;
 
+import android.app.Activity;
 import android.app.Application;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.devspark.appmsg.AppMsg;
 import com.dornbachs.zebra.TGApplication;
 import com.lrkj.utils.LrToast;
 
@@ -16,8 +19,7 @@ import java.io.File;
 public class LrApplication extends TGApplication {
 
     public static LrApplication sApplication = null;
-
-    public static String MAP_FOLDER = null;
+    public Activity sActivity = null;
 
     @Override
     public void onCreate() {
@@ -27,16 +29,29 @@ public class LrApplication extends TGApplication {
         mkMapFolder();
     }
 
-    public static boolean mkMapFolder() {
+    public static void startMsgService() {
+        Intent i = new Intent(LrApplication.sApplication, LrMsgService.class);
+        LrApplication.sApplication.startService(i);
+    }
+
+    public static void stopMsgService() {
+        Intent i = new Intent(LrApplication.sApplication, LrMsgService.class);
+        LrApplication.sApplication.stopService(i);
+    }
+
+    public static void mkMapFolder() {
         File f = new File("/mnt/sdcard/"+LrApplication.sApplication.getPackageName()+"/maps");
         if (f.exists() || f.mkdirs()){
-            MAP_FOLDER = f.getAbsolutePath();
         }
         else {
-            MAP_FOLDER = null;
-            LrToast.toast("请在设置中开启权限！", sApplication);
+            LrToast.toast("请在设置中开启文件访问权限！");
         }
-        return MAP_FOLDER != null;
+        f = new File("/mnt/sdcard/"+LrApplication.sApplication.getPackageName()+"/navi");
+        if (f.exists() || f.mkdirs()){
+        }
+        else {
+            LrToast.toast("请在设置中开启文件访问权限！");
+        }
     }
 
     public static void saveIP(String ip) {

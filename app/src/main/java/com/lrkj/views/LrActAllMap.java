@@ -25,17 +25,20 @@ import com.mobeta.android.dslv.DragSortListView;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickListener {
 
     DragSortListView mListView;
 
-    static final String Prex = "/mnt/sdcard/com.lrkj.ctrl/maps/";
+    String Prex = "/mnt/sdcard/com.lrkj.ctrl/";
 
     ArrayList<File> mFiles = new ArrayList<>();
     String mIp = null;
     boolean mIsNavi = false;
+    boolean mSortAsc = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,13 +49,18 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
 
         mIp = getIntent().getStringExtra("ip");
         mIsNavi = getIntent().getBooleanExtra("navi", false);
-
+        Prex += (mIsNavi ? "navi/" : "maps/");
+        ((TextView)findViewById(R.id.tvTitle)).setText(mIsNavi ? "地图导航":"地图管理");
         mListView = (DragSortListView) findViewById(android.R.id.list);
         mListView.setAdapter(this);
         mListView.setDragEnabled(false);
         mListView.setRemoveListener(onMore);
 
-        updateSceneList();
+        if (mIsNavi) {
+            loadMapDatas();
+        }else {
+            updateSceneList();
+        }
     }
 
     @Override
@@ -66,7 +74,7 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
     public void onResume()
     {
         super.onResume();
-
+        LrApplication.mkMapFolder();
     }
 
     public void onClickReload(View v) {
@@ -105,10 +113,36 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
         });
     }
 
+    public class FileSortComparator implements Comparator<File> {
+        String mT = "name";
+        boolean mAsc = true;
+        public FileSortComparator(String type, boolean asc){
+            super();
+            mT = type;
+            mAsc = asc;
+        }
+        @Override
+        public int compare(File pFile1, File pFile2) {
+            if ("name".equalsIgnoreCase(mT)) {
+                if (mAsc)
+                    return pFile1.getName().compareToIgnoreCase(pFile2.getName());
+                else
+                    return pFile2.getName().compareToIgnoreCase(pFile1.getName());
+            } else if ("time".equalsIgnoreCase(mT)){
+                if (mAsc)
+                    return pFile1.lastModified() > pFile2.lastModified() ? 1 : -1;
+                else
+                    return pFile1.lastModified() > pFile2.lastModified() ? -1 : 1;
+            }
+
+            return 0;
+        }
+    }
+
     private void loadMapDatas() {
         LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
                 .setMessage("加载中...")
-                .setCancelable(false)
+                .setCancelable(true)
                 .setCancelOutside(false);
         final LoadingDailog dialog=loadBuilder.create();
         dialog.show();
@@ -116,7 +150,7 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
         new Thread(new Runnable() {
             @Override
             public void run() {
-                LrNativeApi.getAllMaps();
+                LrNativeApi.getAllMaps(mIsNavi ? 1 : 0);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -257,6 +291,12 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
 
     @Override
     public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.name || id == R.id.time) {
+            Collections.sort(mFiles, new FileSortComparator(id == R.id.name ? "name" : "time", !mSortAsc));
+            updateSceneList();
+            return;
+        }
         Object o = v.getTag();
         if (o != null && (o+"").contains("-")) {
             String[] t = (o+"").split("-");

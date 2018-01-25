@@ -113,6 +113,7 @@ public class LrMainEntryAct extends LrBaseAct implements DialogInterface.OnDismi
                 revealView.hide(p.x, p.y, backgroundColor, 0, 330, null);
             }
         }, 300);
+        LrApplication.startMsgService();
     }
 
     public void revealFromTop(String colorr) {
