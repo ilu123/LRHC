@@ -15,9 +15,9 @@ public class LrDefines {
     public static final class Cmds {
         public static final int CMD_MAP_RESET = 1;
         public static final int CMD_MAP_FINISH = 2;
+        public static final int CMD_MAP_LASER = 4;
         public static final int CMD_MAP_SAVE = 5;
 
-        public static final int CMD_BRING_UP = 999;
         public static final int CMD_SHUTDOWN = 1000;
         public static final int CMD_REBOOT = 1001;
         public static final int CMD_STOP_MISSION = 1002;
@@ -25,7 +25,13 @@ public class LrDefines {
         public static final int CMD_GET_MAP = 1006;
         public static final int CMD_NAVI_START = 1013;
         public static final int CMD_NAVI_STOP = 1077;
+        public static final int CMD_RESET_SYSTEM = 1078;
+        public static final int CMD_DEL_ALL_MAP = 2019;
+    }
 
+    public static final class State {
+        public static final int MAP_SAVED = 0xc5;
+        public static final int DOT_OK = 0xd0;
     }
 
     public static final String COLOR_MAIN_THEME = "#00bcd4";
