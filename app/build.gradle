@@ -44,6 +44,6 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:25.0.0'
     compile 'com.android.support:design:25.0.0'
-    compile project(':openCVLibrary2411')
+    compile (name:'opencv-2411', ext:'aar')
     compile 'com.github.gittjy:LoadingDialog:1.0.2'
 }
