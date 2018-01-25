@@ -16,47 +16,37 @@ JNIEXPORT void JNICALL Java_com_lrkj_business_LrNativeApi_setRobotIp
   (JNIEnv *, jclass, jstring);
 
 
-JNIEXPORT jboolean JNICALL Java_com_lrkj_business_LrNativeApi_writeBitmapToPgm
-        (JNIEnv *env, jclass, jstring path, jintArray buf, int w, int h);
-
 /*
  * Class:     com_lrkj_business_LrNativeApi
  * Method:    getDotFrame
  * Signature: (J)Z
  */
 JNIEXPORT jboolean JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getDotFrame
-        (JNIEnv *env, jclass clazz, jobject obj, jlong ioMat);
+        (JNIEnv *, jclass, jobject, jlong);
 
 JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_stopDotSocket
         (JNIEnv *, jclass);
-
-JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_saveLaserFrame
-        (JNIEnv *env, jclass clazz);
-
-JNIEXPORT jboolean JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getLaserFrame
-    (JNIEnv *, jclass, jobject, jlong, jstring mappgm);
     
-JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_stopLaserSocket
+    JNIEXPORT jboolean JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getLaserFrame
+    (JNIEnv *, jclass, jobject, jlong);
+    
+    JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_stopLaserSocket
     (JNIEnv *, jclass);
-
+    
+    JNIEXPORT jint JNICALL Java_com_lrkj_business_LrNativeApi_getAllMaps
+    (JNIEnv *, jclass);
 
 
 // Navi
 
 JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getNaviFrame
-        (JNIEnv *env, jclass clazz, jobject obj, jstring ipS, jstring map, jlong matMap, jlong ioMat, jint width, jint height);
+        (JNIEnv *env, jclass clazz, jobject obj, jstring ipS, jlong ioMat);
 JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_clickNaviTo
         (JNIEnv *env, jclass clazz, jint px, jint py);
 
 JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_stopNaviSocket
         (JNIEnv *, jclass);
 
-// Map
-JNIEXPORT jint JNICALL Java_com_lrkj_business_LrNativeApi_getAllMaps
-        (JNIEnv *, jclass);
-
-JNIEXPORT jint JNICALL Java_com_lrkj_business_LrNativeApi_sendEditMap
-        (JNIEnv *env, jclass clazz, jstring name, jstring mapPath);
 
 #ifdef __cplusplus
 }

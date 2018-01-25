@@ -30,7 +30,6 @@ import android.widget.LinearLayout;
 import com.dornbachs.zebra.utils.DrawUtils;
 import com.dornbachs.zebra.utils.FloodFill;
 import com.dornbachs.zebra.utils.Progress;
-import com.lrkj.business.LrNativeApi;
 import com.lrkj.utils.PgmImage;
 
 import java.io.File;
@@ -49,10 +48,9 @@ public class PaintMapView extends View {
         super(context, attrs);
         _state = new State();
         _paint = new Paint();
-        _paint.setStrokeWidth(14);
+        _paint.setStrokeWidth(4);
         _paint.setAntiAlias(true);
         _paint.setStyle(Paint.Style.STROKE);
-        _paint.setColor(Color.BLACK);
         _paint.setStrokeCap(Paint.Cap.ROUND);
     }
 
@@ -154,14 +152,9 @@ public class PaintMapView extends View {
         try {
             // Write the result to the dest file.
             file.getParentFile().mkdirs();
-            int[] pixels = new int[nr];
-            result.getPixels(pixels, 0, wr, 0, 0, wr, hr);
-            if (LrNativeApi.writeBitmapToPgm(file.getAbsolutePath(), pixels, wr, hr)) {
-                Progress.sendIncrementProgress(progressHandler, PROGRESS_SAVE);
-            }else{
-                progressHandler.sendEmptyMessage(Progress.MESSAGE_DONE_ERROR);
-                return;
-            }
+            OutputStream outStream = new FileOutputStream(file);
+            PgmImage.fromBitmap(result).save(outStream);
+            Progress.sendIncrementProgress(progressHandler, PROGRESS_SAVE);
         } catch (Exception e) {
             progressHandler.sendEmptyMessage(Progress.MESSAGE_DONE_ERROR);
             return;
@@ -177,12 +170,6 @@ public class PaintMapView extends View {
     public synchronized void setPaintColor(int color) {
         _state._color = color;
         _paint.setColor(color);
-    }
-    public int getPaintColor() {
-        return _state._color;
-    }
-    public int getPaintSize() {
-        return (int)_paint.getStrokeWidth();
     }
     public synchronized void setPaintSize(float size) {
         _paint.setStrokeWidth(size);
@@ -208,7 +195,7 @@ public class PaintMapView extends View {
     }
 
     private static final int THRESHHOLD_MOVE = 15;
-    private int mLastX, mLastY;
+
     public boolean onTouchEvent(MotionEvent e) {
         final int X = (int) e.getRawX();
         final int Y = (int) e.getRawY();
@@ -226,10 +213,7 @@ public class PaintMapView extends View {
                 _delta.y = Y - lp.topMargin;
             }
         } else {
-            if (action == MotionEvent.ACTION_DOWN){
-                mLastX = (int)e.getX();
-                mLastY = (int)e.getY();
-            }else if (action == MotionEvent.ACTION_MOVE) {
+            if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_MOVE) {
                 paint((int) e.getX(), (int) e.getY());
 
             }
@@ -239,11 +223,7 @@ public class PaintMapView extends View {
 
     public synchronized void paint(int x, int y) {
         if (_state._canvas != null && _state._paintedBitmap != null) {
-            //_state._canvas.drawPoint(x, y, _paint);
-            _state._canvas.drawLine(mLastX, mLastY, x, y, _paint);
-            mLastX = x;
-            mLastY = y;
-            invalidate();
+            _state._canvas.drawPoint(x, y, _paint);
         }
     }
 

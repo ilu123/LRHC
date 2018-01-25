@@ -15,7 +15,6 @@
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
-    xmlns:fbutton="http://schemas.android.com/apk/res-auto"
     xmlns:zebra="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
@@ -30,7 +29,7 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <com.lrkj.widget.PaintMapView
+            <com.dornbachs.zebra.views.PaintView
                 android:id="@+id/paint_view"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent" />
@@ -41,63 +40,36 @@
                 android:layout_width="240dip"
                 android:layout_height="wrap_content" />
         </LinearLayout>
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="50dp"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
-
 
         <ImageButton
-            android:layout_margin="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:background="@null"
             android:onClick="onClickScale"
-            android:src="@drawable/ic_scale" />
+            android:src="@android:drawable/ic_menu_zoom" />
 
         <ImageButton
-            android:layout_margin="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:background="@null"
             android:onClick="onClickPan"
-            android:src="@drawable/ic_move" />
+            android:src="@android:drawable/ic_menu_mapmode" />
 
         <ImageButton
-            android:layout_margin="10dp"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:background="@null"
-            android:onClick="onClickColor"
-            android:src="@drawable/ic_ink_b" />
-
-        <ImageButton
-            android:layout_margin="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:background="@null"
-            android:onClick="onClickSize"
-            android:src="@drawable/ic_pen" />
-    </LinearLayout>
+            android:onClick="onClickLock"
+            android:src="@android:drawable/ic_menu_view" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:layout_marginBottom="10dp"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
@@ -106,58 +78,44 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <info.hoang8f.widget.FButton
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="完成编辑"
-            android:textColor="#fff"
-            android:textSize="14sp"
-            fbutton:buttonColor="@color/fbutton_color_alizarin"
-            fbutton:shadowEnabled="true" />
+            android:textSize="14sp" />
 
         <View
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <info.hoang8f.widget.FButton
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="查看预览"
-            android:textColor="#fff"
-            android:textSize="14sp"
-            fbutton:buttonColor="@color/fbutton_color_sun_flower"
-            fbutton:shadowEnabled="true" />/>
+            android:textSize="14sp" />
 
         <View
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <info.hoang8f.widget.FButton
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:onClick="onClickSave"
             android:text="保存地图"
-            android:textColor="#fff"
-            android:textSize="14sp"
-            fbutton:buttonColor="@color/fbutton_color_emerald"
-            fbutton:shadowEnabled="true" />
+            android:textSize="14sp" />
 
         <View
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <info.hoang8f.widget.FButton
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:onClick="onClickExit"
             android:text="放弃返回"
-            android:textColor="#fff"
-            android:textSize="14sp"
-            fbutton:buttonColor="@color/fbutton_color_wet_asphalt"
-            fbutton:shadowEnabled="true" />
+            android:textSize="14sp" />
 
         <View
             android:layout_width="0dp"

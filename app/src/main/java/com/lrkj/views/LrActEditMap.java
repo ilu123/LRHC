@@ -20,7 +20,6 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,28 +27,24 @@ import android.os.Message;
 import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.dornbachs.zebra.TGApplication;
 import com.dornbachs.zebra.modal.ImageItem;
 import com.dornbachs.zebra.utils.Progress;
+import com.dornbachs.zebra.views.PaintView;
 import com.lrkj.ctrl.R;
 import com.lrkj.utils.PGM;
-import com.lrkj.widget.PaintMapView;
-import com.lrkj.widget.SeekDialog;
 
 import java.io.File;
 
 
-public class LrActEditMap extends LrBaseAct implements PaintMapView.LifecycleListener {
+public class LrActEditMap extends Activity implements PaintView.LifecycleListener {
     boolean _isLocked = true;
     int _scaleSize = 1;
     int _lockedOreitation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
     OrientationEventListener mOrientationEventListener = null;
     String mImagePath = null;
-    int mColor = Color.BLACK;
 
     public LrActEditMap() {
         _state = new State();
@@ -62,7 +57,7 @@ public class LrActEditMap extends LrBaseAct implements PaintMapView.LifecycleLis
 
         mImagePath = getIntent().getStringExtra("map");
 
-        _paintView = (PaintMapView) findViewById(R.id.paint_view);
+        _paintView = (PaintView) findViewById(R.id.paint_view);
         _paintView.setLifecycleListener(this);
         _progressBar = (ProgressBar) findViewById(R.id.paint_progress);
         _progressBar.setMax(Progress.MAX);
@@ -90,12 +85,10 @@ public class LrActEditMap extends LrBaseAct implements PaintMapView.LifecycleLis
         this.startOrientationListener();
 
 
-        if (mImagePath != null) {
-            ImageItem item = new ImageItem();
-            item.isDrawable = false;
-            item.outlinePath = mImagePath;
-            new InitPaintView(item);
-        }
+        ImageItem item = new ImageItem();
+        item.isDrawable = false;
+        item.outlinePath = mImagePath;
+        new InitPaintView(item);
     }
 
     /**
@@ -104,9 +97,6 @@ public class LrActEditMap extends LrBaseAct implements PaintMapView.LifecycleLis
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (_originalOutlineBitmap != null)
-            _originalOutlineBitmap.recycle();
-        _originalOutlineBitmap = null;
     }
 
     /**
@@ -223,17 +213,12 @@ public class LrActEditMap extends LrBaseAct implements PaintMapView.LifecycleLis
 
     public void onClickPan(View v) {
         v.setSelected(!v.isSelected());
-        if (v.isSelected()) {
-            ((ImageButton)v).setImageResource(R.drawable.ic_move);
-        }else{
-            ((ImageButton)v).setImageResource(R.drawable.ic_move2);
-        }
         _paintView.setIsPan(v.isSelected());
     }
 
     public void onClickLock(View v) {
-        //v.setSelected(!v.isSelected());
-        //_isLocked = !v.isSelected();
+        v.setSelected(!v.isSelected());
+        _isLocked = !v.isSelected();
     }
 
     public void onClickScale(View c) {
@@ -244,38 +229,6 @@ public class LrActEditMap extends LrBaseAct implements PaintMapView.LifecycleLis
         _paintView.setScaleY(_scaleSize);
         _paintView.setScaleX(_scaleSize);
     }
-    public void onClickColor(View v) {
-        ImageView vv = (ImageView) v;
-        if (mColor == Color.BLACK) {
-            mColor = Color.WHITE;
-            vv.setImageResource(R.drawable.ic_ink_w);
-        }else if (mColor == Color.WHITE) {
-            mColor = Color.BLACK;
-            vv.setImageResource(R.drawable.ic_ink_b);
-        }
-
-        _paintView.setPaintColor(mColor);
-    }
-
-    public void onClickSize(View v) {
-        new SeekDialog(this).setTitle("画笔大小").setProgress(_paintView.getPaintSize()).setMaxMin(0, 100)
-                .setListener(new SeekDialog.OnSeekbarChangedListener() {
-                    @Override
-                    public void onChange(int progress) {
-                        _paintView.setPaintSize(progress);
-                    }
-                }).show();
-    }
-
-    public void onClickSave(View v) {
-        new BitmapSaver(mImagePath);
-    }
-    public void onClickExit(View v) {
-        this.finish();
-    }
-
-
-    private Bitmap _originalOutlineBitmap;
 
     private class InitPaintView implements Runnable {
         public InitPaintView(ImageItem item) {
@@ -327,15 +280,12 @@ public class LrActEditMap extends LrBaseAct implements PaintMapView.LifecycleLis
             iw = pgm.getWidth();
             ih = pgm.getHeight();
             pix = pgm.readData(iw, ih, 5);   //P5-Gray image
-            if (iw <= 0 || ih <= 0) {
-                _handler.sendEmptyMessage(Progress.MESSAGE_DONE_ERROR);
-                return;
-            }
             _originalOutlineBitmap = Bitmap.createBitmap(iw, ih, Bitmap.Config.ARGB_4444);
             _originalOutlineBitmap.setPixels(pix, 0, iw, 0, 0, iw, ih);
             _paintView.loadFromBitmap(_originalOutlineBitmap, iw, ih, _handler);
         }
 
+        private Bitmap _originalOutlineBitmap;
         private Handler _handler;
     }
 
@@ -380,6 +330,11 @@ public class LrActEditMap extends LrBaseAct implements PaintMapView.LifecycleLis
                 showDialog(DIALOG_PROGRESS);
                 _progressDialog.setTitle("保存中");
                 _progressDialog.setProgress(0);
+                if (_state._imageItem.isDrawable) {
+                    _originalOutlineBitmap = TGApplication.getAssetBitmap(_state._imageItem.outlinePath);
+                } else {
+                    _originalOutlineBitmap = BitmapFactory.decodeFile(_state._imageItem.outlinePath);
+                }
 
                 _progressHandler = new ProgressHandler();
                 new Thread(this).start();
@@ -393,6 +348,7 @@ public class LrActEditMap extends LrBaseAct implements PaintMapView.LifecycleLis
             _paintView.saveToFile(_file, _originalOutlineBitmap, _progressHandler);
         }
 
+        private Bitmap _originalOutlineBitmap;
         private String _fileName;
         private File _file;
         private Handler _progressHandler;
@@ -424,7 +380,7 @@ public class LrActEditMap extends LrBaseAct implements PaintMapView.LifecycleLis
     private State _state;
 
     // Main UI elements.
-    private PaintMapView _paintView;
+    private PaintView _paintView;
     private ProgressBar _progressBar;
     private ProgressDialog _progressDialog;
 

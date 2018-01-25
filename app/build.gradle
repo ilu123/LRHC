@@ -17,28 +17,10 @@ android {
             }
         }
     }
-    signingConfigs {
-        Debug {
-            keyAlias 'debugK'
-            storeFile file('../../keystores/debug.jks')
-            storePassword "123456"
-            keyPassword "123456"
-        }
-        Release {
-            keyAlias 'releaseK'
-            storeFile file('../../keystores/realseK.jks')
-            storePassword "123456"
-            keyPassword "123456"
-        }
-    }
     buildTypes {
         release {
-            signingConfig signingConfigs.Release
             minifyEnabled false
-            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-        }
-        debug {
-            signingConfig signingConfigs.Debug
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     externalNativeBuild {
@@ -64,6 +46,4 @@ dependencies {
     compile 'com.android.support:design:25.0.0'
     compile project(':openCVLibrary2411')
     compile 'com.github.gittjy:LoadingDialog:1.0.2'
-    compile 'info.hoang8f:fbutton:1.0.5'
-
 }

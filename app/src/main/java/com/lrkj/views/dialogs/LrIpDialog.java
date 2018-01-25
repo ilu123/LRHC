@@ -3,7 +3,6 @@ package com.lrkj.views.dialogs;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -23,13 +22,14 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.lrkj.LrApplication;
 import com.lrkj.business.LrRobot;
 import com.lrkj.ctrl.R;
 import com.lrkj.defines.LrDefines;
 import com.lrkj.views.LrMainEntryAct;
 import com.lrkj.widget.CircularRevealView;
 import com.lrkj.widget.TextDrawable;
+
+import static com.lrkj.business.LrRobot.getRobot;
 
 /**
  * Created by ztb.
@@ -48,7 +48,7 @@ public class LrIpDialog extends DialogFragment {
     Button btnConnect;
 
     private static final int BG_PRIO = android.os.Process.THREAD_PRIORITY_BACKGROUND;
-    private static final int RUNNABLE_DELAY_MS = 6000;
+    private static final int RUNNABLE_DELAY_MS = 3000;
 
 
     @Override
@@ -69,9 +69,7 @@ public class LrIpDialog extends DialogFragment {
 
         btnConnect = (Button) view.findViewById(R.id.btn_connect);
         etIp = (EditText) view.findViewById(R.id.et_ip);
-
-        etIp.setText(LrApplication.getIP());
-
+        etIp.setText("192.168.100.177");
         btnConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,7 +87,6 @@ public class LrIpDialog extends DialogFragment {
                     public void handleMessage(Message msg) {
                         super.handleMessage(msg);
                         if (msg.what == 100) {
-                            LrApplication.saveIP(etIp.getText().toString());
                             LrIpDialog.this.dismiss();
                         }else if (msg.what == -100){
                             revealView.hide(p.x, p.y, backgroundColor, 0, 330, null);
@@ -106,6 +103,32 @@ public class LrIpDialog extends DialogFragment {
 
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         this.setCancelable(false);
+//
+//        TextDrawable drawable1 = TextDrawable.builder()
+//                .buildRound("P", Color.parseColor("#d32f2f"));
+//        ((ImageView) view.findViewById(R.id.ipower)).setImageDrawable(drawable1);
+//
+//        TextDrawable drawable2 = TextDrawable.builder()
+//                .buildRound("S", Color.parseColor("#009688"));
+//        ((ImageView) view.findViewById(R.id.isafe)).setImageDrawable(drawable2);
+//
+//        TextDrawable drawable3 = TextDrawable.builder()
+//                .buildRound("B", Color.parseColor("#009688"));
+//        ((ImageView) view.findViewById(R.id.ibootloader)).setImageDrawable(drawable3);
+//
+//        TextDrawable drawable4 = TextDrawable.builder()
+//                .buildRound("R", Color.parseColor("#009688"));
+//        ((ImageView) view.findViewById(R.id.irecovery)).setImageDrawable(drawable4);
+//
+//        TextDrawable drawable5 = TextDrawable.builder()
+//                .buildRound("S", Color.parseColor("#e91e63"));
+//        ((ImageView) view.findViewById(R.id.isoftreboot)).setImageDrawable(drawable5);
+//
+//        TextDrawable drawable6 = TextDrawable.builder()
+//                .buildRound("R", Color.parseColor("#3f51b5"));
+//        ((ImageView) view.findViewById(R.id.ireboot)).setImageDrawable(drawable6);
+//
+
         return view;
 
     }
@@ -132,7 +155,7 @@ public class LrIpDialog extends DialogFragment {
             super.run();
             setThreadPrio(BG_PRIO);
 
-            int result = LrRobot.sendCommand(mIp, LrDefines.Cmds.CMD_RESET_SYSTEM, null) ? 100 : -100;
+            int result = LrRobot.getRobot(mIp).isConnected() ? 100 : -100;
 
             this.mHandler.sendEmptyMessageDelayed(result, RUNNABLE_DELAY_MS);
             this.mHandler = null;

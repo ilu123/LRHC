@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom">
+
+    <com.lrkj.widget.KnobView
+        android:id="@+id/croller"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        app:back_circle_color="#EDEDED"
+        app:indicator_color="#0B3C49"
+        app:indicator_width="10"
+        app:is_continuous="false"
+        app:label="Label"
+        app:label_color="#000000"
+        app:main_circle_color="#FFFFFF"
+        app:max="360"
+        app:progress_primary_color="#0B3C49"
+        app:progress_secondary_color="#EDEDED"
+        app:start_offset="0" />
+
+</LinearLayout>

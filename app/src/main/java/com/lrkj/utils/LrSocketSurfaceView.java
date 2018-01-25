@@ -1,7 +1,6 @@
 package com.lrkj.utils;
 
 import android.content.Context;
-import android.os.Handler;
 import android.os.StrictMode;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -9,7 +8,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 
-import com.lrkj.LrApplication;
 import com.lrkj.ctrl.R;
 import com.lrkj.defines.LrDefines;
 
@@ -43,7 +41,6 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
     private volatile String mIp;
     private volatile int mPort;
     private volatile int mCmd = -1;
-    String mMapName;
     protected Socket mSocket;
     protected NativeCameraFrame mFrame;
 
@@ -58,11 +55,6 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
     public void setupSocketIpAndPort(String ip, int port) {
         mIp = ip;
         mPort = port;
-    }
-    public void setupSocketIpAndPort(String ip, int port, String mapName) {
-        mIp = ip;
-        mPort = port;
-        mMapName = mapName;
     }
 
     public void sendCmd(int cmd) {
@@ -127,16 +119,10 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (mCameraIndex == LrDefines.PORT_NAVIGATION) {
-            if (originImg != null && originImg.rows() > 0) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    int x = (int) event.getX();
-                    int y = (int) event.getY();
-                    Log.d("Touch-----", "Scale===" + mScale + ", x===" + x + ", y===" + y);
-
-                    clickNaviTo((int)(x/mScale), (int)(y/mScale));
-                }
-            }
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            int x = (int) event.getX();
+            int y = (int) event.getY();
+            clickNaviTo(x, y);
         }
         return super.onTouchEvent(event);
     }
@@ -166,31 +152,31 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
             mFrameWidth = (int) frameSize.width;
             mFrameHeight = (int) frameSize.height;
 
+            int type = CvType.CV_8UC3;
+            if(mCameraIndex == LrDefines.PORT_DOT) {
+                type = CvType.CV_8UC3;
+            }else if (mCameraIndex == LrDefines.PORT_READ_LASER) {
+                type = CvType.CV_8UC1;
+            }else if (mCameraIndex == LrDefines.PORT_NAVIGATION) {
+                type = CvType.CV_8UC1;
+            }
+            mFrame = new NativeCameraFrame(mFrameWidth, mFrameHeight, type);
+
+            if ((getLayoutParams().width == LayoutParams.MATCH_PARENT) && (getLayoutParams().height == LayoutParams.MATCH_PARENT))
+                mScale = Math.min(((float) height) / mFrameHeight, ((float) width) / mFrameWidth);
+            else
+                mScale = 0;
+
             if (mFpsMeter != null) {
                 mFpsMeter.setResolution(mFrameWidth, mFrameHeight);
             }
 
-            int type = CvType.CV_8UC3;
-            if(mCameraIndex == LrDefines.PORT_DOT) {
-                type = CvType.CV_8UC3;
-                AllocateCache(mFrameWidth, mFrameHeight, type);
-            }else if (mCameraIndex == LrDefines.PORT_READ_LASER) {
-                type = CvType.CV_8UC1;
-                AllocateCache(mFrameWidth, mFrameHeight, type);
-            }else if (mCameraIndex == LrDefines.PORT_NAVIGATION) {
-                type = CvType.CV_8UC1;
-            }
-
+            AllocateCache(type);
         }
 
         Log.i(TAG, "Selected camera frame size = (" + mFrameWidth + ", " + mFrameHeight + ")");
 
         return true;
-    }
-
-    protected void AllocateCache(int w, int h, int type) {
-        super.AllocateCache(w, h);
-        mFrame = new NativeCameraFrame(w, h, type);
     }
 
     private void releaseCamera() {
@@ -215,68 +201,49 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
         }
 
         public NativeCameraFrame(int w, int h, int type) {
-            mRgba = new Mat(h, w, type);
+            mRgba = new Mat(w, h, type);
         }
 
         public void release() {
             if (mRgba != null) mRgba.release();
         }
 
-        @Override
-        public int state() {
-            return mState;
-        }
-
-        public int mState;
         private Mat mRgba;
     }
 
     private Mat originImg = null;
 
-    public class CameraWorker implements Runnable {
+    private class CameraWorker implements Runnable {
         public void run() {
 //            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 //            StrictMode.setThreadPolicy(policy);
             InputStream input = null;
             OutputStream output = null;
-            while (mIp == null && !mStopThread) ;
-
             if (mCameraIndex == LrDefines.PORT_DOT) {
                 originImg = new Mat(600, 600, CvType.CV_8UC3);
-                while (!mStopThread) {
-                    try {
-                        getDotFrame(LrSocketSurfaceView.this, originImg.getNativeObjAddr());
-                        //LrSocketSurfaceView.this.postDotFrameFromNative();
-                    } catch (Throwable e) {
+                originImg.setTo(Scalar.all(128));
+                try {
+                    getDotFrame(LrSocketSurfaceView.this, originImg.getNativeObjAddr());
+                } catch (Throwable e) {
 
-                    }
                 }
             } else if(mCameraIndex == LrDefines.PORT_READ_LASER) {
-                originImg = mFrame.mRgba;
-                while (!mStopThread) {
-                    try {
-                        getLaserFrame(LrSocketSurfaceView.this, originImg.getNativeObjAddr(), mMapName+"");
-                    } catch (Throwable e) {
+                originImg = mFrame.mRgba.clone();
+                try {
+                    getLaserFrame(LrSocketSurfaceView.this, originImg.getNativeObjAddr());
+                } catch (Throwable e) {
 
-                    }
                 }
             } else if(mCameraIndex == LrDefines.PORT_NAVIGATION) {
-                Mat originImg2 = Highgui.imread("/mnt/sdcard/com.lrkj.ctrl/maps/"+mMapName+".pgm");
-                AllocateCache(originImg2.cols(), originImg2.rows(), CvType.CV_8UC1);
-                originImg = originImg2.clone();
-                //while (!mStopThread) {
-                    try {
-                        getNaviFrame(LrSocketSurfaceView.this, mIp, mMapName, originImg2.getNativeObjAddr(), originImg.getNativeObjAddr(),
-                                originImg.cols(), originImg.rows());
-                    } catch (Throwable e) {
-                        Log.e(",", e+"");
-                    }
-                Log.e(",", "ewewewewewewewe");
-                //}
+                originImg = mFrame.mRgba.clone();
+                try {
+                    getNaviFrame(LrSocketSurfaceView.this, mIp, originImg.getNativeObjAddr());
+                } catch (Throwable e) {
+
+                }
             }
 
             else {
-                if (true) return;
                 originImg = new Mat(100, 100, CvType.CV_8UC3);
                 originImg.setTo(Scalar.all(128));
                 int MAX_SIZE = (int) (originImg.total() * originImg.elemSize());
@@ -367,69 +334,41 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
         }
     }
 
-    public void resetCanvas(int color) {
-        if (originImg != null) {
-            originImg.setTo(new Scalar(color));
-        }
-    }
 
     ////// All Native calls ////////
 
     public void postDotFrameFromNative() {
-        //Mat tmp = Highgui.imdecode(originImg, Highgui.CV_LOAD_IMAGE_COLOR);
-        //Log.d(TAG, "run SHAPe: ----------[" + tmp.channels() + "]");
-        //Imgproc.cvtColor(tmp, originImg, Imgproc.COLOR_BGR2RGB);
+        Mat tmp = Highgui.imdecode(originImg, Highgui.CV_LOAD_IMAGE_COLOR);
+        Log.d(TAG, "run SHAPe: ----------[" + tmp.channels() + "]");
+        Imgproc.cvtColor(tmp, originImg, Imgproc.COLOR_BGR2RGB);
         Imgproc.resize(originImg, mFrame.mRgba, mFrame.mRgba.size());
         deliverAndDrawFrame(mFrame);
-        //tmp.release();
+        tmp.release();
     }
 
     public void postLaserFrameFromNative() {
-        //Mat tmp = Highgui.imdecode(originImg, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
-        //Log.d(TAG, "run SHAPe: ----------[" + tmp.channels() + "]");
+        Mat tmp = Highgui.imdecode(originImg, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+        Log.d(TAG, "run SHAPe: ----------[" + tmp.channels() + "]");
         //Imgproc.cvtColor(tmp, originImg, Imgproc.COLOR_Gr);
         Imgproc.resize(originImg, mFrame.mRgba, mFrame.mRgba.size());
         deliverAndDrawFrame(mFrame);
-        //tmp.release();
+        tmp.release();
     }
 
     public void postNaviFrameFromNative() {
-        if (mFrame != null && mFrame.mRgba.rows() > 0) {
-            Imgproc.resize(originImg, mFrame.mRgba, mFrame.mRgba.size());
-            deliverAndDrawFrame(mFrame);
-        }
-        //tmp.release();
-    }
-
-    public void saveLaserFrameFromNativeDone() {
-        if (getContext() == null)
-            return;
-        new Handler(getContext().getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                LrToast.toast("保存完成！");
-            }
-        });
-    }
-
-    public void setSlamState(final int s) {
-        if (getContext() == null)
-            return;
-        new Handler(getContext().getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                if (mFrame != null)
-                    mFrame.mState = s;
-            }
-        });
+        Mat tmp = Highgui.imdecode(originImg, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+        Log.d(TAG, "run SHAPe: ----------[" + tmp.channels() + "]");
+        //Imgproc.cvtColor(tmp, originImg, Imgproc.COLOR_Gr);
+        Imgproc.resize(originImg, mFrame.mRgba, mFrame.mRgba.size());
+        deliverAndDrawFrame(mFrame);
+        tmp.release();
     }
 
     public static native boolean getDotFrame(LrSocketSurfaceView obj, long ioMat);
     public static native void stopDotSocket();
-    public static native boolean getLaserFrame(LrSocketSurfaceView obj, long ioMat, String mappgm);
-    public static native void saveLaserFrame();
+    public static native boolean getLaserFrame(LrSocketSurfaceView obj, long ioMat);
     public static native void stopLaserSocket();
-    public static native boolean getNaviFrame(LrSocketSurfaceView obj, String ip, String map, long matMap, long ioMat, int mw, int mh);
+    public static native boolean getNaviFrame(LrSocketSurfaceView obj, String ip, long ioMat);
     public static native void stopNaviSocket();
     public static native void clickNaviTo(int x, int y);
 }

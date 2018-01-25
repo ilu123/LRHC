@@ -25,7 +25,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 
-public class LrActNavi extends LrBaseAct implements LrSocketBridgeViewBase.CvCameraViewListener2{
+public class LrActNavi extends Activity implements LrSocketBridgeViewBase.CvCameraViewListener2{
     private static final String TAG = "LrActMakeMap::Activity";
 
     private LrSocketSurfaceView mCameraNavi;
@@ -51,9 +51,24 @@ public class LrActNavi extends LrBaseAct implements LrSocketBridgeViewBase.CvCam
         mCameraNavi = (LrSocketSurfaceView) findViewById(R.id.camera_navi);
 
         if (mRobotIp != null) {
-            mCameraNavi.setupSocketIpAndPort(mRobotIp, LrDefines.PORT_NAVIGATION, mMapName);
+            mCameraNavi.setupSocketIpAndPort(mRobotIp, LrDefines.PORT_NAVIGATION);
             mCameraNavi.setVisibility(SurfaceView.VISIBLE);
-            mCameraNavi.setCvCameraViewListener(this);
+            mCameraNavi.setCvCameraViewListener(new LrSocketBridgeViewBase.CvCameraViewListener2() {
+                @Override
+                public void onCameraViewStarted(int width, int height) {
+
+                }
+
+                @Override
+                public void onCameraViewStopped() {
+
+                }
+
+                @Override
+                public Mat onCameraFrame(LrSocketBridgeViewBase.CvCameraViewFrame inputFrame) {
+                    return inputFrame.rgba();
+                }
+            });
         }else{
             LrToast.toast("没有连接机器人", this);
         }
@@ -74,7 +89,6 @@ public class LrActNavi extends LrBaseAct implements LrSocketBridgeViewBase.CvCam
         super.onPause();
         if (mCameraNavi != null)
             mCameraNavi.disableView();
-        LrToast.stopLoading();
     }
 
     @Override
@@ -91,32 +105,15 @@ public class LrActNavi extends LrBaseAct implements LrSocketBridgeViewBase.CvCam
             mCameraNavi.disableView();
     }
 
-
-    private void sendCmd(final int c) {
-        LrToast.showLoading(this, "发送中...");
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final boolean ok = LrRobot.sendCommand(mRobotIp, c, null);
-                LrActNavi.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        LrToast.stopLoading();
-                        LrToast.toast(ok ? "命令已发送" : "命令发送失败");
-                    }
-                });
-            }
-        }).start();
-    }
-
     /** Clicks **/
     public void onClickBtn(View v) {
+        LrToast.toast("命令已发送", this);
         switch (v.getId()) {
             case R.id.btn_finish:
-                sendCmd(LrDefines.Cmds.CMD_STOP_MISSION);
+                LrRobot.getRobot(mRobotIp).sendCommand(LrDefines.Cmds.CMD_STOP_MISSION, null);
                 break;
             case R.id.btn_close:
-                sendCmd(LrDefines.Cmds.CMD_NAVI_STOP);
+                LrRobot.getRobot(mRobotIp).sendCommand(LrDefines.Cmds.CMD_NAVI_STOP, null);
                 break;
         }
     }
@@ -142,11 +139,11 @@ public class LrActNavi extends LrBaseAct implements LrSocketBridgeViewBase.CvCam
 //    @Override
 //    public void onBackPressed() {}
 //
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            this.finish();
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            return true;
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
 }

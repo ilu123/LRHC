@@ -14,12 +14,10 @@ import android.os.Handler;
 import android.view.Display;
 import android.widget.FrameLayout;
 
-import com.lrkj.LrApplication;
 import com.lrkj.business.LrNativeApi;
 import com.lrkj.business.LrRobot;
 import com.lrkj.ctrl.R;
 import com.lrkj.defines.LrDefines;
-import com.lrkj.utils.LrToast;
 import com.lrkj.views.dialogs.LrIpDialog;
 import com.lrkj.widget.CircularRevealView;
 
@@ -28,7 +26,7 @@ import org.opencv.android.OpenCVLoader;
 /**
  * Created by ztb.
  */
-public class LrMainEntryAct extends LrBaseAct implements DialogInterface.OnDismissListener {
+public class LrMainEntryAct extends Activity implements DialogInterface.OnDismissListener {
 
     private FrameLayout mFragmentContainer;
     private LrIpDialog mFragDialog;
@@ -48,8 +46,6 @@ public class LrMainEntryAct extends LrBaseAct implements DialogInterface.OnDismi
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) //系统回收bug
             return;
-
-        LrApplication.mkMapFolder();
 
         OpenCVLoader.initDebug();
 
@@ -76,16 +72,11 @@ public class LrMainEntryAct extends LrBaseAct implements DialogInterface.OnDismi
         }, 500);
 
 
-        final String ip = getIntent().getStringExtra("ip");
         handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (ip != null) {
-                    showMenuFragment();
-                }else {
-                    showIpDialog();
-                }
+                showIpDialog();
             }
         }, 800);
     }
@@ -124,12 +115,6 @@ public class LrMainEntryAct extends LrBaseAct implements DialogInterface.OnDismi
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        mIp = LrApplication.getIP();
-    }
-
-    @Override
     public void onDismiss(final DialogInterface dialog) {
         this.mIp = this.mFragDialog.getIp();
         LrNativeApi.setRobotIp(mIp);
@@ -161,31 +146,26 @@ public class LrMainEntryAct extends LrBaseAct implements DialogInterface.OnDismi
         }, 500);
     }
 
-    public void gotoMapActivity(final String name) {
-        if (LrRobot.sendCommand(mIp, LrDefines.Cmds.CMD_SLAM, name)){
-            LrToast.showLoading(this, "准备中...");
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    LrToast.stopLoading();
-                    Intent i = new Intent(LrMainEntryAct.this, LrActMakeMap.class);
-                    i.putExtra("ip", mIp);
-                    i.putExtra("name", name);
-                    startActivity(i);
-                    LrMainEntryAct.this.finish(); //GC bug
-                }
-            }, 3000);
-        }
-        else{
-            LrToast.toast("启动SLAM失败!");
-        }
+    public void gotoMapActivity(String name) {
 
+        LrRobot.getRobot(mIp).sendCommand(LrDefines.Cmds.CMD_SLAM, name);
+
+        Intent i = new Intent(this, LrActMakeMap.class);
+        i.putExtra("ip", this.mIp);
+        i.putExtra("name", name);
+        startActivity(i);
+        this.finish(); //GC bug
     }
 
-    public void gotoAllMaps(boolean isNavi){
+    public void gotoAllMaps(){
         Intent i = new Intent(this, LrActAllMap.class);
         i.putExtra("ip", this.mIp);
-        i.putExtra("navi", isNavi);
+        startActivity(i);
+    }
+
+    public void gotoNavi(){
+        Intent i = new Intent(this, LrActAllMap.class);
+        i.putExtra("ip", this.mIp);
         startActivity(i);
     }
 
