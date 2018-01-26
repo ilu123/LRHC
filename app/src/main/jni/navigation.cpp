@@ -1,5 +1,5 @@
 //
-// Created by Administrator on 2016/12/13.
+// Created by stevejobs on 2017.
 //
 
 #include <iostream>
@@ -53,12 +53,12 @@ static char *ServerIP;
 static int ServerPort = 4104;
 static int ServerPortCmd = 4103;
 static bool StopSocket = false;
-static int sokt = -1;
+static int SocktNavi = -1;
 
 static float orix, oriy;      // 地图原点（左下角的像素点） 所对应的实际坐标
 static float reso = 0.025;  // 地图分辨率  单位  米/像素
 static bool send_flag = false;
-static float x, y;    // 目的地的实际坐标 单位 米
+static float xTarget, yTarget, angleTarget;    // 目的地的实际坐标 单位 米
 static cv::Point landMark(0, 0);  // 目的地（像素像素坐标）
 static int MAP_WIDTH = 0, MAP_HEIGHT = 0;
 
@@ -132,10 +132,11 @@ static bool printAck(int sokt) {
 }
 
 
-static void click(int px, int py, int flags) {   // 点击更改目的地为 px py
+static void click(int px, int py, float flags) {   // 点击更改目的地为 px py
         //根据像素坐标推算实际坐标
-        x = px * reso + orix;
-        y = oriy + (MAP_HEIGHT - py) * reso;
+        xTarget = px * reso + orix;
+        yTarget = oriy + (MAP_HEIGHT - py) * reso;
+        angleTarget = flags;
         send_flag = true;
         landMark.x = px;
         landMark.y = py;
@@ -159,45 +160,45 @@ JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getNaviFrame
     MAP_WIDTH = width;
     MAP_HEIGHT = height;
 
-    sokt = createSocket(ip, ServerPortCmd);
-    if (sendSignal(sokt, 999) && sendSignal(sokt, 1013) &&
-        ((send(sokt, mapName, strlen(mapName), 0)) != -1)) {
-        while(printAck(sokt));
-        if (!sendSignal(sokt, 1006)) {
-            close(sokt);
+    SocktNavi = createSocket(ip, ServerPortCmd);
+    if (sendSignal(SocktNavi, 999) && sendSignal(SocktNavi, 1013) &&
+        ((send(SocktNavi, mapName, strlen(mapName), 0)) != -1)) {
+        while(printAck(SocktNavi));
+        if (!sendSignal(SocktNavi, 1006)) {
+            close(SocktNavi);
             return;
         }
-        int i = recvSignal(sokt);
+        int i = recvSignal(SocktNavi);
         if (i != -1) {
             if (i == 0) {
-                close(sokt);
+                close(SocktNavi);
                 return;
             } else if (i == 1) {
-                orix = recvFloat(sokt);  // 获取原点 x
+                orix = recvFloat(SocktNavi);  // 获取原点 x
                 if (orix < -10000) {
                     //cout << "recv float error " << endl ;
-                    close(sokt);
+                    close(SocktNavi);
                     return;
                 }
 
-                oriy = recvFloat(sokt);   // 获取原点 y
+                oriy = recvFloat(SocktNavi);   // 获取原点 y
                 if (oriy < -10000) {
                     //cout << "recv float error " << endl ;
-                    close(sokt);
+                    close(SocktNavi);
                     return;
                 }
 
-                int width = recvSignal(sokt); // 获取地图宽度
+                int width = recvSignal(SocktNavi); // 获取地图宽度
                 if (width == -1) {
                     //cout << "recv  error " << endl ;
-                    close(sokt);
+                    close(SocktNavi);
                     return;
                 }
 
-                int height = recvSignal(sokt); // 获取地图高度
+                int height = recvSignal(SocktNavi); // 获取地图高度
                 if (height == -1) {
                     //cout << "recv  error " << endl ;
-                    close(sokt);
+                    close(SocktNavi);
                     return;
                 }
 
@@ -207,9 +208,9 @@ JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getNaviFrame
                 uchar *iptr = img22.data;
 
                 int bytes = 0;
-                if ((bytes = recv(sokt, iptr, imgSize, MSG_WAITALL)) <= 0) {
+                if ((bytes = recv(SocktNavi, iptr, imgSize, MSG_WAITALL)) <= 0) {
                     //std::cerr << "recv failed, received bytes = " << bytes << std::endl;
-                    close(sokt);
+                    close(SocktNavi);
                     return;
                 }
 
@@ -218,15 +219,15 @@ JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getNaviFrame
                 img22.release();
             }
         } else {
-            close(sokt);
-            sokt = -1;
+            close(SocktNavi);
+            SocktNavi = -1;
             return;
         }
     }else{
-        close(sokt);
+        close(SocktNavi);
         return;
     }
-    close(sokt);
+    close(SocktNavi);
 
 
     ////////// nav
@@ -234,11 +235,11 @@ JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getNaviFrame
     int bytes = 0;
     cv::Mat markLayer = img.clone();
 
-    sokt = createSocket(ip, ServerPort);
+    SocktNavi = createSocket(ip, ServerPort);
 
     while (!StopSocket) {
-        if (sokt < 0) {
-            sokt = createSocket(ip, ServerPort);
+        if (SocktNavi < 0) {
+            SocktNavi = createSocket(ip, ServerPort);
         }
 
         markLayer.setTo(cv::Scalar(0));
@@ -248,14 +249,14 @@ JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getNaviFrame
             cv::circle(markLayer, landMark, 8, cv::Scalar(255, 0, 0), -1, CV_AA);
             send_flag = false;
 
-            if (sendSignal(sokt, 1005)) {
+            if (sendSignal(SocktNavi, 1005)) {
 
                 //cout << "send succeed" << endl ;
 
                 // 发送目的地
-                if (!sendFloat(sokt, x)) return;
-                if (!sendFloat(sokt, y)) return;
-                if (!sendFloat(sokt, 0)) return;
+                if (!sendFloat(SocktNavi, xTarget)) return;
+                if (!sendFloat(SocktNavi, yTarget)) return;
+                if (!sendFloat(SocktNavi, angleTarget)) return;
 
             } else {
 
@@ -265,22 +266,22 @@ JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getNaviFrame
         }
 
         // get pose  获取当前机器人位置
-        if (sendSignal(sokt, 1007)) {
+        if (sendSignal(SocktNavi, 1007)) {
 
             // 机器人当前位置
-            float x = recvFloat(sokt);
+            float x = recvFloat(SocktNavi);
             if (x < -10000) {
                 return;
             }
 
 
-            float y = recvFloat(sokt);
+            float y = recvFloat(SocktNavi);
             if (y < -10000) {
                 return;
             }
 
 
-            float z = recvFloat(sokt);
+            float z = recvFloat(SocktNavi);
 
 
             int px = (int) ((x - orix) / reso);
@@ -293,10 +294,10 @@ JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getNaviFrame
         }
 
         // get path   获取规划路径
-        if (sendSignal(sokt, 1008)) {
+        if (sendSignal(SocktNavi, 1008)) {
             int size;
             // 规划路径的点的个数
-            if ((bytes = recv(sokt, &size, sizeof(size), 0)) <= 0) {
+            if ((bytes = recv(SocktNavi, &size, sizeof(size), 0)) <= 0) {
                 return;
             }
 
@@ -304,7 +305,7 @@ JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getNaviFrame
                 std::vector<std::pair<float, float> > vec; // 规划路径的容器
                 vec.resize(size);
 
-                if ((bytes = recv(sokt, &(*vec.begin()), size * 8, MSG_WAITALL)) <= 0) {
+                if ((bytes = recv(SocktNavi, &(*vec.begin()), size * 8, MSG_WAITALL)) <= 0) {
                     return;
                 }
 
@@ -336,28 +337,29 @@ JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getNaviFrame
         if (StopSocket) break;
     }
 
-    close(sokt);
-    sokt = -1;
+    close(SocktNavi);
+    SocktNavi = -1;
 }
 
 JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_clickNaviTo
-        (JNIEnv *env, jclass clazz, jint px, jint py) {
-    click(px, py, 0);
+        (JNIEnv *env, jclass clazz, jint px, jint py, jfloat angle) {
+    click(px, py, angle);
 }
 
 JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_stopNaviSocket
         (JNIEnv *, jclass) {
     StopSocket = true;
-    if (sokt >= 0) {
-        close(sokt);
+    if (SocktNavi >= 0) {
+        close(SocktNavi);
     }
-    sokt = -1;
+    SocktNavi = -1;
     StopSocket = false;
     orix = 0;
     oriy = 0;      // 地图原点（左下角的像素点） 所对应的实际坐标
     reso = 0.025;  // 地图分辨率  单位  米/像素
     send_flag = false;
-    x = 0;
-    y = 0;    // 目的地的实际坐标 单位 米
+    angleTarget = 0;
+    xTarget = 0;
+    yTarget = 0;    // 目的地的实际坐标 单位 米
 }
 

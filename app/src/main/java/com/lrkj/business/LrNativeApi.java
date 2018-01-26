@@ -1,5 +1,7 @@
 package com.lrkj.business;
 
+import org.opencv.android.OpenCVLoader;
+
 /**
  * Created by tianbao.zhao on 2017/12/13.
  */
@@ -7,6 +9,9 @@ package com.lrkj.business;
 public class LrNativeApi {
     static {
         System.loadLibrary("my-lib");
+    }
+    public static void loadLibrary(){
+        OpenCVLoader.initDebug();
     }
 
     //public static native String getStringTmp();

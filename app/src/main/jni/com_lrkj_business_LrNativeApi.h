@@ -46,7 +46,7 @@ JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_stopLaserSocket
 JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getNaviFrame
         (JNIEnv *env, jclass clazz, jobject obj, jstring ipS, jstring map, jlong matMap, jlong ioMat, jint width, jint height);
 JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_clickNaviTo
-        (JNIEnv *env, jclass clazz, jint px, jint py);
+        (JNIEnv *env, jclass clazz, jint px, jint py, jfloat angle);
 
 JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_stopNaviSocket
         (JNIEnv *, jclass);

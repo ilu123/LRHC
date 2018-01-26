@@ -51,8 +51,6 @@ public class LrMainEntryAct extends LrBaseAct implements DialogInterface.OnDismi
 
         LrApplication.mkMapFolder();
 
-        OpenCVLoader.initDebug();
-
         setContentView(R.layout.activity_main_entry);
 
         mFragmentContainer = (FrameLayout)findViewById(R.id.fragment_container);

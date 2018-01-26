@@ -7,7 +7,11 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewParent;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.lrkj.LrApplication;
 import com.lrkj.ctrl.R;
@@ -47,6 +51,10 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
     protected Socket mSocket;
     protected NativeCameraFrame mFrame;
 
+    private ImageView mArrow;
+    private int mX, mY; //robot target position
+    private float mAngle; //robot direction
+
     public LrSocketSurfaceView(Context context, int cameraId) {
         super(context, cameraId);
     }
@@ -59,6 +67,7 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
         mIp = ip;
         mPort = port;
     }
+
     public void setupSocketIpAndPort(String ip, int port, String mapName) {
         mIp = ip;
         mPort = port;
@@ -105,11 +114,11 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
         if (mThread != null) {
             try {
                 mStopThread = true;
-                if(mCameraIndex == LrDefines.PORT_DOT) {
+                if (mCameraIndex == LrDefines.PORT_DOT) {
                     stopDotSocket();
-                }else if (mCameraIndex == LrDefines.PORT_READ_LASER) {
+                } else if (mCameraIndex == LrDefines.PORT_READ_LASER) {
                     stopLaserSocket();
-                }else if (mCameraIndex == LrDefines.PORT_NAVIGATION) {
+                } else if (mCameraIndex == LrDefines.PORT_NAVIGATION) {
                     stopNaviSocket();
                 }
                 mThread.join();
@@ -128,15 +137,30 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (mCameraIndex == LrDefines.PORT_NAVIGATION) {
-            if (originImg != null && originImg.rows() > 0) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    int x = (int) event.getX();
-                    int y = (int) event.getY();
-                    Log.d("Touch-----", "Scale===" + mScale + ", x===" + x + ", y===" + y);
-
-                    clickNaviTo((int)(x/mScale), (int)(y/mScale));
-                }
+            if (mArrow == null) {
+                mArrow = (ImageView) ((ViewGroup) this.getParent()).findViewById(R.id.arrow);
             }
+            //if (originImg != null && originImg.rows() > 0) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    mX = (int) event.getX();
+                    mY = (int) event.getY();
+                    FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mArrow.getLayoutParams();
+                    lp.leftMargin = mX;
+                    lp.topMargin = mY;
+                    mArrow.setPivotX(0);
+                    mArrow.setPivotY(0);
+                    mArrow.setLayoutParams(lp);
+                } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    mArrow.setVisibility(View.VISIBLE);
+                    mAngle = (float) (-Math.atan2((mY - event.getY()), mX - event.getX()));
+                    mArrow.setRotation((float) Math.toDegrees(360-mAngle));
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    mArrow.setVisibility(View.INVISIBLE);
+                    clickNaviTo((int) (mX / mScale), (int) (mY / mScale), mAngle);
+                } else{
+                    mArrow.setVisibility(View.INVISIBLE);
+                }
+           // }
         }
         return super.onTouchEvent(event);
     }
@@ -171,14 +195,14 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
             }
 
             int type = CvType.CV_8UC3;
-            if(mCameraIndex == LrDefines.PORT_DOT) {
+            if (mCameraIndex == LrDefines.PORT_DOT) {
                 type = CvType.CV_8UC3;
                 AllocateCache(mFrameWidth, mFrameHeight, type);
-            }else if (mCameraIndex == LrDefines.PORT_READ_LASER) {
+            } else if (mCameraIndex == LrDefines.PORT_READ_LASER) {
                 type = CvType.CV_8UC1;
                 AllocateCache(mFrameWidth, mFrameHeight, type);
-            }else if (mCameraIndex == LrDefines.PORT_NAVIGATION) {
-                type = CvType.CV_8UC1;
+            } else if (mCameraIndex == LrDefines.PORT_NAVIGATION) {
+
             }
 
         }
@@ -251,31 +275,29 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
 
                     }
                 }
-            } else if(mCameraIndex == LrDefines.PORT_READ_LASER) {
+            } else if (mCameraIndex == LrDefines.PORT_READ_LASER) {
                 originImg = mFrame.mRgba;
                 while (!mStopThread) {
                     try {
-                        getLaserFrame(LrSocketSurfaceView.this, originImg.getNativeObjAddr(), mMapName+"");
+                        getLaserFrame(LrSocketSurfaceView.this, originImg.getNativeObjAddr(), mMapName + "");
                     } catch (Throwable e) {
 
                     }
                 }
-            } else if(mCameraIndex == LrDefines.PORT_NAVIGATION) {
-                Mat originImg2 = Highgui.imread("/mnt/sdcard/com.lrkj.ctrl/navi/"+mMapName+".pgm");
+            } else if (mCameraIndex == LrDefines.PORT_NAVIGATION) {
+                Mat originImg2 = Highgui.imread("/mnt/sdcard/com.lrkj.ctrl/navi/" + mMapName + ".pgm");
                 AllocateCache(originImg2.cols(), originImg2.rows(), CvType.CV_8UC1);
                 originImg = originImg2.clone();
                 //while (!mStopThread) {
-                    try {
-                        getNaviFrame(LrSocketSurfaceView.this, mIp, mMapName, originImg2.getNativeObjAddr(), originImg.getNativeObjAddr(),
-                                originImg.cols(), originImg.rows());
-                    } catch (Throwable e) {
-                        Log.e(",", e+"");
-                    }
+                try {
+                    getNaviFrame(LrSocketSurfaceView.this, mIp, mMapName, originImg2.getNativeObjAddr(), originImg.getNativeObjAddr(),
+                            originImg.cols(), originImg.rows());
+                } catch (Throwable e) {
+                    Log.e(",", e + "");
+                }
                 Log.e(",", "ewewewewewewewe");
                 //}
-            }
-
-            else {
+            } else {
                 if (true) return;
                 originImg = new Mat(100, 100, CvType.CV_8UC3);
                 originImg.setTo(Scalar.all(128));
@@ -425,11 +447,18 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
     }
 
     public static native boolean getDotFrame(LrSocketSurfaceView obj, long ioMat);
+
     public static native void stopDotSocket();
+
     public static native boolean getLaserFrame(LrSocketSurfaceView obj, long ioMat, String mappgm);
+
     public static native void saveLaserFrame();
+
     public static native void stopLaserSocket();
+
     public static native boolean getNaviFrame(LrSocketSurfaceView obj, String ip, String map, long matMap, long ioMat, int mw, int mh);
+
     public static native void stopNaviSocket();
-    public static native void clickNaviTo(int x, int y);
+
+    public static native void clickNaviTo(int x, int y, float a);
 }

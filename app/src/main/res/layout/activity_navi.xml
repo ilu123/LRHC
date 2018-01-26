@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:layout_alignLeft="@+id/center_view"
         android:layout_weight="0.7"
-        android:background="#0f0"
+        android:background="#000"
         android:clickable="true"
         android:focusableInTouchMode="true">
 
@@ -25,10 +25,16 @@
             android:layout_height="match_parent"
             android:clickable="true"
             android:focusableInTouchMode="true"
-            android:visibility="gone"
+            android:visibility="visible"
             opencv:camera_id="4104"
             opencv:show_fps="false" />
 
+        <ImageView
+            android:id="@+id/arrow"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/arrow"/>
     </FrameLayout>
 
     <LinearLayout
