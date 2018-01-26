@@ -153,7 +153,7 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
                 } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
                     mArrow.setVisibility(View.VISIBLE);
                     mAngle = (float) (-Math.atan2((mY - event.getY()), mX - event.getX()));
-                    mArrow.setRotation((float) Math.toDegrees(360-mAngle));
+                    mArrow.setRotation((float) Math.toDegrees(mAngle) + 360);
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     mArrow.setVisibility(View.INVISIBLE);
                     clickNaviTo((int) (mX / mScale), (int) (mY / mScale), mAngle);
