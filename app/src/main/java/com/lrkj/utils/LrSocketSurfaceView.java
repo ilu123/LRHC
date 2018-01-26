@@ -141,7 +141,7 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
             if (mArrow == null) {
                 mArrow = (ImageView) ((ViewGroup) this.getParent()).findViewById(R.id.arrow);
             }
-            //if (originImg != null && originImg.rows() > 0) {
+            if (originImg != null && originImg.rows() > 0) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     mX = (int) event.getX();
                     mY = (int) event.getY();
@@ -162,7 +162,7 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
                 } else{
                     mArrow.setVisibility(View.INVISIBLE);
                 }
-           // }
+            }
         }
         return super.onTouchEvent(event);
     }

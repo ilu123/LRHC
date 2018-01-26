@@ -17,10 +17,28 @@ android {
             }
         }
     }
+    signingConfigs {
+        Debug {
+            keyAlias 'debugK'
+            storeFile file('../keystores/debug.jks')
+            storePassword "123456"
+            keyPassword "123456"
+        }
+        Release {
+            keyAlias 'releaseK'
+            storeFile file('../keystores/realseK.jks')
+            storePassword "123456"
+            keyPassword "123456"
+        }
+    }
     buildTypes {
         release {
+            signingConfig signingConfigs.Release
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+        debug {
+            signingConfig signingConfigs.Debug
         }
     }
     externalNativeBuild {
