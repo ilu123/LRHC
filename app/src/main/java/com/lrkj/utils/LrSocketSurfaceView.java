@@ -32,7 +32,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.opencv.ml.CvSVM.P;
+import static android.R.attr.x;
+import static android.R.attr.y;
 
 
 /**
@@ -153,7 +154,8 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
                 } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
                     mArrow.setVisibility(View.VISIBLE);
                     mAngle = (float) (-Math.atan2((mY - event.getY()), mX - event.getX()));
-                    mArrow.setRotation((float) Math.toDegrees(mAngle) + 360);
+                    float degrees = (float) (-mAngle * 180 / Math.PI) + 180.f;
+                    mArrow.setRotation(degrees);
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     mArrow.setVisibility(View.INVISIBLE);
                     clickNaviTo((int) (mX / mScale), (int) (mY / mScale), mAngle);
