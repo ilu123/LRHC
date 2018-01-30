@@ -3,7 +3,6 @@ package com.lrkj.views.dialogs;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -18,10 +17,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.lrkj.LrApplication;
 import com.lrkj.business.LrRobot;
@@ -29,7 +25,6 @@ import com.lrkj.ctrl.R;
 import com.lrkj.defines.LrDefines;
 import com.lrkj.views.LrMainEntryAct;
 import com.lrkj.widget.CircularRevealView;
-import com.lrkj.widget.TextDrawable;
 
 /**
  * Created by ztb.
