@@ -41,19 +41,4 @@ public final class DrawUtils {
 		canvas.drawBitmap(src, mSrcDest, new Paint(Paint.DITHER_FLAG));
 	}
 
-	public static void convertSizeFill(Bitmap src, Bitmap dest) {
-		Canvas canvas = new Canvas(dest);
-		RectF srcRect = new RectF(0, 0, src.getWidth(), src.getHeight());
-		RectF destRect = new RectF(0, 0, dest.getWidth(), dest.getHeight());
-
-		Matrix m = new Matrix();
-		m.setRectToRect(srcRect, destRect, Matrix.ScaleToFit.CENTER);
-
-		canvas.drawBitmap(src, m, new Paint(Paint.DITHER_FLAG));
-	}
-
-	public static int brightness(int color) {
-		// Because this should be fast, we cheat: simply return the green channel.
-		return (color >> 16) & 0xff;
-	}
 }

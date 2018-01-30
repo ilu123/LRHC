@@ -11,14 +11,7 @@ import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
-import com.dornbachs.zebra.utils.StorageUtils;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * TODO

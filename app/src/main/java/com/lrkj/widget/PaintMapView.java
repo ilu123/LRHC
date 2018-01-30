@@ -28,16 +28,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.dornbachs.zebra.utils.DrawUtils;
-import com.dornbachs.zebra.utils.FloodFill;
 import com.dornbachs.zebra.utils.Progress;
 import com.lrkj.business.LrNativeApi;
-import com.lrkj.utils.PgmImage;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Arrays;
 
 public class PaintMapView extends View {
     public interface LifecycleListener {
