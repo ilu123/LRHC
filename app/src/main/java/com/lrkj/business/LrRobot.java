@@ -60,10 +60,12 @@ public class LrRobot {
                     try {
                         try {
                             mSocket.shutdownInput();
-                        }catch (Throwable e) {}
+                        } catch (Throwable e) {
+                        }
                         try {
                             mSocket.shutdownOutput();
-                        }catch (Throwable e) {}
+                        } catch (Throwable e) {
+                        }
                         mSocket.close();
                     } catch (IOException ea) {
                         ea.printStackTrace();
@@ -75,11 +77,13 @@ public class LrRobot {
         }
         return ok;
     }
+
     public static boolean isInMainThread() {
         return Looper.myLooper() == Looper.getMainLooper();
     }
+
     public static boolean sendCmd(String ip, int port, int c, String more) {
-        if (ip == null)
+        if (ip == null || ip.trim().length() <= 0)
             return false;
         if (isInMainThread()) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -106,7 +110,7 @@ public class LrRobot {
                     mSocket.getOutputStream().write(nn);
                     mSocket.getOutputStream().flush();
                 }
-            }else if (c == LrDefines.Cmds.CMD_SLAM) {
+            } else if (c == LrDefines.Cmds.CMD_SLAM) {
                 if (more != null) {
                     mSocket.getOutputStream().write(more.getBytes("utf-8"));
                     mSocket.getOutputStream().flush();
@@ -131,31 +135,33 @@ public class LrRobot {
                     LrToast.toast(String.format("ACK: %s", new String(buff)));
                     ok = true;
                 }
-            }else {
+            } else {
                 ok = true;
             }
         } catch (Throwable e) {
             e.printStackTrace();
             ok = false;
             LrToast.toast("命令发送失败！");
-        } finally {
-            while (mSocket != null || mSocket.isConnected()) {
-                if (mSocket != null) {
+        }
+        {
+            while (mSocket != null) {
+                if (mSocket.isConnected()) {
                     try {
-                        try {
-                            mSocket.shutdownOutput();
-                        }catch (Throwable e) {}
-                        try {
-                            mSocket.shutdownInput();
-                        }catch (Throwable e) {}
-                        mSocket.close();
-                        mSocket = null;
-                    } catch (IOException ea) {
-                        ea.printStackTrace();
+                        mSocket.shutdownOutput();
+                    } catch (Throwable e) {
+                    }
+                    try {
+                        mSocket.shutdownInput();
+                    } catch (Throwable e) {
                     }
                 }
+                try {
+                    mSocket.close();
+                } catch (IOException ea) {
+                    ea.printStackTrace();
+                }
+                mSocket = null;
             }
-            mSocket = null;
             System.gc();
         }
         return ok;

@@ -79,14 +79,14 @@ public class LrIpDialog extends DialogFragment {
                 frame.setVisibility(View.GONE);
                 frame2.setVisibility(View.VISIBLE);
 
-                new BackgroundThread(new Handler(Looper.getMainLooper()){
+                new BackgroundThread(new Handler(Looper.getMainLooper()) {
                     @Override
                     public void handleMessage(Message msg) {
                         super.handleMessage(msg);
                         if (msg.what == 100) {
                             LrApplication.saveIP(etIp.getText().toString());
                             LrIpDialog.this.dismiss();
-                        }else if (msg.what == -100){
+                        } else if (msg.what == -100) {
                             revealView.hide(p.x, p.y, backgroundColor, 0, 330, null);
                             ((LrMainEntryAct) getActivity()).revealFromTop(LrDefines.COLOR_MAIN_THEME);
                             frame.setVisibility(View.VISIBLE);
@@ -125,12 +125,15 @@ public class LrIpDialog extends DialogFragment {
         @Override
         public void run() {
             super.run();
-            setThreadPrio(BG_PRIO);
+            //setThreadPrio(BG_PRIO);
 
-            int result = LrRobot.sendCommand(mIp, LrDefines.Cmds.CMD_RESET_SYSTEM, null) ? 100 : -100;
-
-            this.mHandler.sendEmptyMessageDelayed(result, RUNNABLE_DELAY_MS);
-            this.mHandler = null;
+            try {
+                int result = LrRobot.sendCommand(mIp, LrDefines.Cmds.CMD_RESET_SYSTEM, null) ? 100 : -100;
+                this.mHandler.sendEmptyMessageDelayed(result, RUNNABLE_DELAY_MS);
+                this.mHandler = null;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

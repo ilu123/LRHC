@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
@@ -20,50 +21,58 @@ import java.io.IOException;
 public final class LrToast {
     private static LoadingDailog sLD = null;
 
-    public static void toast(String msg, Context context) {
+    public static void toast(final String msg, Context context) {
         if (Looper.myLooper() == Looper.getMainLooper()){
             Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_LONG).show();
             return;
         }
-        try {
-            Looper.prepare();
-            Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_LONG).show();
-            Looper.loop();
-        } catch (Throwable e) {}
+        Looper lp = LrApplication.sApplication.getMainLooper();
+        new Handler(lp).post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    public static void toast(int msg, Context context) {
+    public static void toast(final int msg, Context context) {
         if (Looper.myLooper() == Looper.getMainLooper()){
             Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_LONG).show();
             return;
         }
-        try {
-            Looper.prepare();
-            Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_LONG).show();
-            Looper.loop();
-        } catch (Throwable e) {}
+        Looper lp = LrApplication.sApplication.getMainLooper();
+        new Handler(lp).post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
-    public static void toast(int msg) {
+    public static void toast(final int msg) {
         if (Looper.myLooper() == Looper.getMainLooper()){
             Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_SHORT).show();
             return;
         }
-        try {
-            Looper.prepare();
-            Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_SHORT).show();
-            Looper.loop();
-        } catch (Throwable e) {}
+        Looper lp = LrApplication.sApplication.getMainLooper();
+        new Handler(lp).post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
-    public static void toast(String msg) {
+    public static void toast(final String msg) {
         if (Looper.myLooper() == Looper.getMainLooper()){
             Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_SHORT).show();
             return;
         }
-        try {
-            Looper.prepare();
-            Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_SHORT).show();
-            Looper.loop();
-        } catch (Throwable e) {}
+        Looper lp = LrApplication.sApplication.getMainLooper();
+        new Handler(lp).post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public static LoadingDailog showLoading(Context c, String msg) {
