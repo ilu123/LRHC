@@ -102,7 +102,6 @@ public class LrActNavi extends LrBaseAct implements LrSocketBridgeViewBase.CvCam
                     @Override
                     public void run() {
                         LrToast.stopLoading();
-                        LrToast.toast(ok ? "命令已发送" : "命令发送失败");
                     }
                 });
             }
