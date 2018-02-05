@@ -34,6 +34,7 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
     DragSortListView mListView;
 
     String Prex = "/mnt/sdcard/com.lrkj.ctrl/";
+    final String PrexF = "/mnt/sdcard/com.lrkj.ctrl/";
 
     ArrayList<File> mFiles = new ArrayList<>();
     String mIp = null;
@@ -306,6 +307,10 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
                     mFiles.remove(Integer.parseInt(t[1]));
                     f.delete();
                     new File(f.getAbsolutePath().replaceAll(".jpg", ".pgm")).delete();
+                    try {
+                        new File(f.getAbsolutePath().replaceFirst("/maps/", "/navi/")).delete();
+                        new File(f.getAbsolutePath().replaceFirst("/maps/", "/navi/").replaceAll(".jpg", ".pgm")).delete();
+                    }catch (Throwable e) {}
                     notifyDataSetChanged();
                 }
             }else if (t[0].equalsIgnoreCase("edit")) {
