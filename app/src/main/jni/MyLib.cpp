@@ -121,7 +121,7 @@ JNIEXPORT jboolean JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getDotFrame
 
     StopSocketDot = false;
 
-    int64_t  MAX_VEC_SIZE = 10000; //最大不超过的点数
+    int64_t  MAX_VEC_SIZE = 10000000; //最大不超过的点数
 
     if (SocketDot < 0) {
         if ((SocketDot = createSocket(ServerIP, Port_Dot)) < 0) {
@@ -292,7 +292,7 @@ JNIEXPORT jboolean JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getLaserFrame
 
     StopSocketLaser = false;
 
-    int64_t  MAX_VEC_SIZE = 10000; //最大不超过的点数
+    int64_t  MAX_VEC_SIZE = 10000000; //最大不超过的点数
 
     if (SocketLaser < 0) {
         if ((SocketLaser = createSocket(ServerIP, Port_Laser)) < 0) {

@@ -3,6 +3,7 @@ package com.lrkj.views;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -57,6 +58,13 @@ public class LrActNavi extends LrBaseAct implements LrSocketBridgeViewBase.CvCam
         }else{
             LrToast.toast("没有连接机器人", this);
         }
+
+        new Handler(LrApplication.sApplication.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                LrToast.showLoading(LrActNavi.this, "正在载入地图...");
+            }
+        }, 1200);
     }
 
     public void setStatus(final String s) {
@@ -102,6 +110,9 @@ public class LrActNavi extends LrBaseAct implements LrSocketBridgeViewBase.CvCam
                     @Override
                     public void run() {
                         LrToast.stopLoading();
+                        if (c == LrDefines.Cmds.CMD_NAVI_STOP) {
+                            LrActNavi.this.finish();
+                        }
                     }
                 });
             }

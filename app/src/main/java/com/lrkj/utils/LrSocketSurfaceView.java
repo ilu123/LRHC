@@ -417,12 +417,23 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
         //tmp.release();
     }
 
+    private boolean mNaviMapShownTip = false;
     public void postNaviFrameFromNative() {
         if (mFrame != null && mFrame.mRgba.rows() > 0) {
             Imgproc.resize(originImg, mFrame.mRgba, mFrame.mRgba.size());
             deliverAndDrawFrame(mFrame);
         }
         //tmp.release();
+        if (!mNaviMapShownTip) {
+            mNaviMapShownTip = true;
+            new Handler(LrApplication.sApplication.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    LrToast.stopLoading();
+                    LrToast.toast("载入地图成功，可以开始导航");
+                }
+            });
+        }
     }
 
     public void saveLaserFrameFromNativeDone() {

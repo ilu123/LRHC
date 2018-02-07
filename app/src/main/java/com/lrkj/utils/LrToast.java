@@ -30,7 +30,7 @@ public final class LrToast {
         new Handler(lp).post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_SHORT).show();
+                Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -44,33 +44,33 @@ public final class LrToast {
         new Handler(lp).post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_SHORT).show();
+                Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_LONG).show();
             }
         });
     }
     public static void toast(final int msg) {
         if (Looper.myLooper() == Looper.getMainLooper()){
-            Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_SHORT).show();
+            Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_LONG).show();
             return;
         }
         Looper lp = LrApplication.sApplication.getMainLooper();
         new Handler(lp).post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_SHORT).show();
+                Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_LONG).show();
             }
         });
     }
     public static void toast(final String msg) {
         if (Looper.myLooper() == Looper.getMainLooper()){
-            Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_SHORT).show();
+            Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_LONG).show();
             return;
         }
         Looper lp = LrApplication.sApplication.getMainLooper();
         new Handler(lp).post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_SHORT).show();
+                Toast.makeText(LrApplication.getInstance(), msg, Toast.LENGTH_LONG).show();
             }
         });
     }

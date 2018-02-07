@@ -267,6 +267,10 @@ public class LrActEditMap extends LrBaseAct implements PaintMapView.LifecycleLis
                 }).show();
     }
 
+    public void onClickClearGray(View v) {
+        _paintView.clearGray();
+    }
+
     public void onClickSave(View v) {
         new BitmapSaver(mImagePath);
     }

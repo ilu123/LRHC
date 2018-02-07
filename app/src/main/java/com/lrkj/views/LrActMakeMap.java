@@ -126,7 +126,7 @@ public class LrActMakeMap extends LrBaseAct implements LrSocketBridgeViewBase.Cv
                         case 3: s =  "lost"; break;
                         case LrDefines.State.MAP_SAVED:
                             mStatus = 2;
-                            if (!hasShownSaveMap) {
+                            if (!hasShownSaveMap && mCurrStep == R.id.btn_save) {
                                 hasShownSaveMap = true;
                                 runOnUiThread(new Runnable() {
                                     @Override

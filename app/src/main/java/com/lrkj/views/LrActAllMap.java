@@ -20,6 +20,7 @@ import com.lrkj.business.LrRobot;
 import com.lrkj.ctrl.R;
 import com.lrkj.defines.LrDefines;
 import com.lrkj.utils.LrToast;
+import com.lrkj.widget.MyRxDialog;
 import com.mobeta.android.dslv.DragSortListView;
 
 import java.io.File;
@@ -28,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+
+import io.reactivex.functions.Consumer;
 
 public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickListener {
 
@@ -51,7 +54,7 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
         mIp = getIntent().getStringExtra("ip");
         mIsNavi = getIntent().getBooleanExtra("navi", false);
         Prex += (mIsNavi ? "navi/" : "maps/");
-        ((TextView)findViewById(R.id.tvTitle)).setText(mIsNavi ? "地图导航":"地图管理");
+        ((TextView) findViewById(R.id.tvTitle)).setText(mIsNavi ? "地图导航" : "地图管理");
         mListView = (DragSortListView) findViewById(android.R.id.list);
         mListView.setAdapter(this);
         mListView.setDragEnabled(false);
@@ -59,21 +62,19 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
 
         if (mIsNavi) {
             loadMapDatas();
-        }else {
+        } else {
             updateSceneList();
         }
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         super.onPause();
 
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         LrApplication.mkMapFolder();
     }
@@ -83,15 +84,30 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
     }
 
     public void onClickDelAll(View v) {
-        if (LrRobot.sendCmd(mIp, LrDefines.PORT_MAPS, 2020, null)) {
-            File folder = new File(Prex);
-            File[] fileArray = folder.listFiles();
-            if (fileArray != null)
-                for (File f : fileArray) {
-                    f.delete();
-                }
-            updateSceneList();
-        }
+        new MyRxDialog(this)
+                .setTitle("提示")
+                .setMessage("确定删除所有地图吗？")
+                .setPositiveText("确定")
+                .setNegativeText("取消")
+                .dialogToObservable()
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        switch (integer) {
+                            case MyRxDialog.POSITIVE:
+                                if (LrRobot.sendCmd(mIp, LrDefines.PORT_MAPS, 2020, null)) {
+                                    File folder = new File(Prex);
+                                    File[] fileArray = folder.listFiles();
+                                    if (fileArray != null)
+                                        for (File f : fileArray) {
+                                            f.delete();
+                                        }
+                                    updateSceneList();
+                                }
+                                break;
+                        }
+                    }
+                });
     }
 
 
@@ -104,11 +120,11 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
                 File folder = new File(Prex);
                 File[] fileArray = folder.listFiles();
                 if (fileArray != null)
-                for (File f : fileArray) {
-                    if (f.isFile() && f.getName().contains(".jpg")) {
-                        mFiles.add(f);
+                    for (File f : fileArray) {
+                        if (f.isFile() && f.getName().contains(".jpg")) {
+                            mFiles.add(f);
+                        }
                     }
-                }
                 notifyDataSetChanged();
             }
         });
@@ -117,11 +133,13 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
     public class FileSortComparator implements Comparator<File> {
         String mT = "name";
         boolean mAsc = true;
-        public FileSortComparator(String type, boolean asc){
+
+        public FileSortComparator(String type, boolean asc) {
             super();
             mT = type;
             mAsc = asc;
         }
+
         @Override
         public int compare(File pFile1, File pFile2) {
             if ("name".equalsIgnoreCase(mT)) {
@@ -129,7 +147,7 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
                     return pFile1.getName().compareToIgnoreCase(pFile2.getName());
                 else
                     return pFile2.getName().compareToIgnoreCase(pFile1.getName());
-            } else if ("time".equalsIgnoreCase(mT)){
+            } else if ("time".equalsIgnoreCase(mT)) {
                 if (mAsc)
                     return pFile1.lastModified() > pFile2.lastModified() ? 1 : -1;
                 else
@@ -145,7 +163,7 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
                 .setMessage("加载中...")
                 .setCancelable(true)
                 .setCancelOutside(false);
-        final LoadingDailog dialog=loadBuilder.create();
+        final LoadingDailog dialog = loadBuilder.create();
         dialog.show();
 
         new Thread(new Runnable() {
@@ -239,25 +257,25 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
         TextView time = (TextView) convertView.findViewById(R.id.time);
 
         long lastTime = f.lastModified();
-        icon.setImageBitmap(BitmapFactory.decodeFile(Prex+f.getName()));
+        icon.setImageBitmap(BitmapFactory.decodeFile(Prex + f.getName()));
         name.setText(f.getName().replaceAll(".jpg", ""));
         time.setText(df.format(new Date(lastTime)));
 
 
         View v = convertView.findViewById(R.id.btn_del);
-        v.setTag("del-"+position);
+        v.setTag("del-" + position);
         v.setOnClickListener(this);
         if (mIsNavi) v.setVisibility(View.GONE);
         v = convertView.findViewById(R.id.btn_edit);
-        v.setTag("edit-"+position);
+        v.setTag("edit-" + position);
         v.setOnClickListener(this);
         if (mIsNavi) v.setVisibility(View.GONE);
         v = convertView.findViewById(R.id.btn_upload);
-        v.setTag("upload-"+position);
+        v.setTag("upload-" + position);
         v.setOnClickListener(this);
         if (mIsNavi) v.setVisibility(View.GONE);
         v = convertView.findViewById(R.id.btn_nav);
-        v.setTag("nav-"+position);
+        v.setTag("nav-" + position);
         v.setOnClickListener(this);
         if (!mIsNavi) v.setVisibility(View.GONE);
 
@@ -299,37 +317,53 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
             return;
         }
         Object o = v.getTag();
-        if (o != null && (o+"").contains("-")) {
-            String[] t = (o+"").split("-");
-            File f = mFiles.get(Integer.parseInt(t[1]));
+        if (o != null && (o + "").contains("-")) {
+            final String[] t = (o + "").split("-");
+            final File f = mFiles.get(Integer.parseInt(t[1]));
             if (t[0].equalsIgnoreCase("del")) {
-                if (LrRobot.sendCmd(mIp, LrDefines.PORT_MAPS, 2019, f.getName().replaceAll(".jpg", ""))) {
-                    mFiles.remove(Integer.parseInt(t[1]));
-                    f.delete();
-                    new File(f.getAbsolutePath().replaceAll(".jpg", ".pgm")).delete();
-                    try {
-                        new File(f.getAbsolutePath().replaceFirst("/maps/", "/navi/")).delete();
-                        new File(f.getAbsolutePath().replaceFirst("/maps/", "/navi/").replaceAll(".jpg", ".pgm")).delete();
-                    }catch (Throwable e) {}
-                    notifyDataSetChanged();
-                }
-            }else if (t[0].equalsIgnoreCase("edit")) {
+                new MyRxDialog(this)
+                        .setTitle("提示")
+                        .setMessage("确定删除地图吗？")
+                        .setPositiveText("确定")
+                        .setNegativeText("取消")
+                        .dialogToObservable()
+                        .subscribe(new Consumer<Integer>() {
+                            @Override
+                            public void accept(Integer integer) throws Exception {
+                                switch (integer) {
+                                    case MyRxDialog.POSITIVE:
+                                        if (LrRobot.sendCmd(mIp, LrDefines.PORT_MAPS, 2019, f.getName().replaceAll(".jpg", ""))) {
+                                            mFiles.remove(Integer.parseInt(t[1]));
+                                            f.delete();
+                                            new File(f.getAbsolutePath().replaceAll(".jpg", ".pgm")).delete();
+                                            try {
+                                                new File(f.getAbsolutePath().replaceFirst("/maps/", "/navi/")).delete();
+                                                new File(f.getAbsolutePath().replaceFirst("/maps/", "/navi/").replaceAll(".jpg", ".pgm")).delete();
+                                            } catch (Throwable e) {
+                                            }
+                                            notifyDataSetChanged();
+                                        }
+                                        break;
+                                }
+                            }
+                        });
+            } else if (t[0].equalsIgnoreCase("edit")) {
                 String test = f.getAbsolutePath().replaceAll(".jpg", ".pgm");
                 if (new File(test).exists()) {
                     Intent i = new Intent(this, LrActEditMap.class);
                     i.putExtra("map", test);
                     startActivity(i);
-                }else{
+                } else {
                     LrToast.toast("地图不存在！");
                 }
-            }else if (t[0].equalsIgnoreCase("upload")) {
+            } else if (t[0].equalsIgnoreCase("upload")) {
                 final String mapPath = f.getAbsolutePath().replaceAll(".jpg", ".pgm");
                 final String mapName = f.getName().replaceAll(".jpg", "");
                 LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
                         .setMessage("上传中...")
                         .setCancelable(false)
                         .setCancelOutside(false);
-                final LoadingDailog dialog=loadBuilder.create();
+                final LoadingDailog dialog = loadBuilder.create();
                 dialog.show();
 
                 new Thread(new Runnable() {
@@ -342,20 +376,20 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
                                 dialog.dismiss();
                                 if (result == 1) {
                                     LrToast.toast("上传成功！");
-                                }else{
+                                } else {
                                     LrToast.toast("上传失败！");
                                 }
                             }
                         });
                     }
                 }).start();
-            }else if (t[0].equalsIgnoreCase("nav")) {
-                    Intent i = new Intent(this, LrActNavi.class);
-                    i.putExtra("map", f.getName().replaceAll(".jpg", ""));
-                    i.putExtra("ip", mIp);
-                    startActivity(i);
+            } else if (t[0].equalsIgnoreCase("nav")) {
+                Intent i = new Intent(this, LrActNavi.class);
+                i.putExtra("map", f.getName().replaceAll(".jpg", ""));
+                i.putExtra("ip", mIp);
+                startActivity(i);
             }
         }
     }
-	/*------------------------ End ------------------------*/
+    /*------------------------ End ------------------------*/
 }

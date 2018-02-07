@@ -195,6 +195,15 @@ public class PaintMapView extends View {
         }
     }
 
+    public void clearGray(){
+        synchronized (_state) {
+            Bitmap old = _state._paintedBitmap;
+            _state._paintedBitmap = DrawUtils.replaceBitmapColor(old, 0xFFAFAFAF, 0xFFFFFFFF);
+            old.recycle();
+            old = null;
+        }
+    }
+
     @Override
     protected synchronized void onDraw(Canvas canvas) {
         if (_state._paintedBitmap != null)
