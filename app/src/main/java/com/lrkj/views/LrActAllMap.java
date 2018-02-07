@@ -103,6 +103,8 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
                                             f.delete();
                                         }
                                     updateSceneList();
+                                }else{
+                                    LrToast.toast("地图删除命令失败！");
                                 }
                                 break;
                         }
@@ -342,6 +344,8 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
                                             } catch (Throwable e) {
                                             }
                                             notifyDataSetChanged();
+                                        }else{
+                                            LrToast.toast("地图删除命令失败！");
                                         }
                                         break;
                                 }

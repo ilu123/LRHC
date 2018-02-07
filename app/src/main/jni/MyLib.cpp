@@ -108,6 +108,40 @@ static int createSocket(const char* ip, int port) {
     return skt;
 }
 
+static bool sendSignal( int sokt , int signal ) {
+    int bytes = 0 ;
+    if ((bytes = send(sokt,  &signal,  4 , 0)) == -1 ){
+        return false ;
+    }
+    return true ;
+}
+
+static int recvSignal( int sokt  ) {
+    int bytes = 0 ;
+    int signal = -1 ;
+    if ((bytes = recv(sokt,  &signal,  4 , 0)) <= 0 ){
+        return -1 ;
+    }
+    return  signal ;
+}
+
+static float recvFloat( int sokt  ) {
+    int bytes = 0 ;
+    float signal = -1000000 ;
+    if ((bytes = recv(sokt,  &signal,  sizeof ( signal ) , 0)) <= 0 ){
+    }
+    return  signal ;
+}
+
+static bool printAck ( int sokt ) {
+    int bytes = 0 ;
+    char resuBuff [1024] ;
+    if ((bytes = recv(sokt, resuBuff , 1024 ,  0)) == -1 ){
+        return false ;
+    }
+    return true;
+}
+
 JNIEXPORT void JNICALL Java_com_lrkj_business_LrNativeApi_setRobotIp
         (JNIEnv *env, jclass thiz, jstring ip) {
     ServerIP = jstringToChars(env, ip);
@@ -306,6 +340,61 @@ JNIEXPORT jboolean JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getLaserFrame
     int bytes = 0;
     int mapWidth =0 ;	// width of the map
     int mapHeight =0 ;	// height of the map
+
+    // 获取地图
+    float orix, oriy;
+    int SocketGetMap = createSocket(ServerIP, 4103);
+    if (SocketGetMap < 0)
+        return 0;
+    if ( sendSignal ( SocketGetMap , 1006)  ) {
+
+        int i = recvSignal ( SocketGetMap  ) ;
+
+        if (i != -1) {
+            if (i ==0) {
+                std::cout << "getMap fail" <<std::endl ;
+            } else if ( i ==1 ) {
+                orix = recvFloat (SocketGetMap) ;
+                if ( orix < -10000) {
+                    std::cout << "recv float error " << std::endl ;
+                    return 0;
+                }
+
+
+                oriy = recvFloat (SocketGetMap) ;
+                if ( oriy < -10000) {
+                    std::cout << "recv float error " << std::endl ;
+                    return 0;
+                }
+
+                int width = recvSignal (SocketGetMap) ;
+                if (width == -1) {
+                    std::cout << "recv  error " << std::endl ;
+                    return 0;
+                }
+
+
+                int height = recvSignal (SocketGetMap) ;
+                if (height == -1) {
+                    std::cout << "recv  error " << std::endl ;
+                    return 0;
+                }
+
+                std::cout << " orix: "<<orix << " y: " <<oriy << " w:" << width << " h: "<< height << std::endl;
+
+                img = cv::Mat::zeros( height ,  width , CV_8UC1);    // CV_8UC1 means that each pixels in the image is type unsigned char
+                int imgSize = img.total() * img.elemSize();
+                uchar *iptr = img.data;
+
+                //                      cout << "imgSize " << imgSize<< endl;
+                if ((bytes = recv(sokt, iptr, imgSize , MSG_WAITALL)) <=0) {
+                    std::cerr << "recv failed, received bytes = " << bytes << std::endl;
+
+                    return 0 ;
+                }
+                cv::imwrite ( "theMap.pgm" , img ) ;
+            }
+        }
 
     //获取地图宽度
     if ((bytes = recv(SocketLaser, &mapWidth, sizeof (mapWidth), MSG_WAITALL)) <= 0){

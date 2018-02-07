@@ -21,6 +21,15 @@
     </item>
     <item
         is-multidex="false"
+        jar="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/libs/httpmime-4.1.2.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="c78eaaea68d0f36f73b646f08cdb34f1a784239b">
+        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/httpmime-4.1.2_fcd37dbd7536562766e163a676ab3e9587e0d46e.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/support-fragment/25.3.1/jars/classes.jar"
         jumboMode="false"
         optimize="true"
@@ -57,60 +66,6 @@
     </item>
     <item
         is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/exploded-aar/info.hoang8f/fbutton/1.0.5/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="2c12397a785c3b1868fbebeffc9553457b27803f">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/info.hoang8f-fbutton-1.0.5_2ad659c9190db6b88997d07d3e6b17e52750de49.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/libs/apache-ant-zip.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="24421e247a1df88e1b83fa34af3d110fc153d010">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/apache-ant-zip_8316e5d0e061f2bbce24ca54b9d6c378fda239e0.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/25.3.1/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="47635644d0d5c103c1dd8360549eb9ba3225c7d3">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/com.android.support-animated-vector-drawable-25.3.1_94b5709f88e47aa2f604db1cb48539875fe545b6.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/exploded-aar/com.github.gittjy/LoadingDialog/1.0.2/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="2c8ba22adec6dd5e03d91bfa63871e2644b736c5">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/com.github.gittjy-LoadingDialog-1.0.2_755fc14828b5764a81d4ec16998b663c570ac98f.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/support-v4/25.3.1/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/com.android.support-support-v4-25.3.1_09184a035a8d4ced7e171bc32766ef32229b3f8c.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/libs/httpmime-4.1.2.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.3"
-        sha1="c78eaaea68d0f36f73b646f08cdb34f1a784239b">
-        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/httpmime-4.1.2_fcd37dbd7536562766e163a676ab3e9587e0d46e.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/design/25.0.0/jars/classes.jar"
         jumboMode="false"
         optimize="true"
@@ -120,12 +75,39 @@
     </item>
     <item
         is-multidex="false"
+        jar="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/exploded-aar/io.reactivex.rxjava2/rxandroid/2.0.1/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="4119ea97a7191ff9b8f33b534ea220448f62f491">
+        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/pre-dexed/release/io.reactivex.rxjava2-rxandroid-2.0.1_ca2c2c65062b71f9826aec0cc171961d2481ae00.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/25.3.1/jars/classes.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.3"
         sha1="efb8cb62d47d157c29d1521daac7eefd4cb881ee">
         <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/com.android.support-support-vector-drawable-25.3.1_f9ac217ce95092a3e1ff16597ee5b09343066c16.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/stevejobs/.gradle/caches/modules-2/files-2.1/io.reactivex.rxjava2/rxjava/2.1.2/3efb75ac15c0659bc34f68d715930af8d57530a7/rxjava-2.1.2.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="3efb75ac15c0659bc34f68d715930af8d57530a7">
+        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/pre-dexed/release/rxjava-2.1.2_d52841fb72013390f08dc0751f22bfba79b34258.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/exploded-aar/info.hoang8f/fbutton/1.0.5/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="2c12397a785c3b1868fbebeffc9553457b27803f">
+        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/info.hoang8f-fbutton-1.0.5_2ad659c9190db6b88997d07d3e6b17e52750de49.jar" />
     </item>
     <item
         is-multidex="false"
@@ -147,12 +129,48 @@
     </item>
     <item
         is-multidex="false"
+        jar="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/libs/apache-ant-zip.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="24421e247a1df88e1b83fa34af3d110fc153d010">
+        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/apache-ant-zip_8316e5d0e061f2bbce24ca54b9d6c378fda239e0.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/25.3.1/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="47635644d0d5c103c1dd8360549eb9ba3225c7d3">
+        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/com.android.support-animated-vector-drawable-25.3.1_94b5709f88e47aa2f604db1cb48539875fe545b6.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/exploded-aar/opencv-2411/jars/classes.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.3"
         sha1="e0642e25c60de103997efd43f484cfb1cf21bd00">
         <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/intermediates-exploded-aar-opencv-2411_2a0de45e80b59024921fa2ca14648b8d2cc83bbc.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/stevejobs/.gradle/caches/modules-2/files-2.1/org.reactivestreams/reactive-streams/1.0.0/14b8c877d98005ba3941c9257cfe09f6ed0e0d74/reactive-streams-1.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="14b8c877d98005ba3941c9257cfe09f6ed0e0d74">
+        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/pre-dexed/release/reactive-streams-1.0.0_ec00732a59fc4b7c9d160682fa2a6440ce19d211.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/exploded-aar/com.github.gittjy/LoadingDialog/1.0.2/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="2c8ba22adec6dd5e03d91bfa63871e2644b736c5">
+        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/com.github.gittjy-LoadingDialog-1.0.2_755fc14828b5764a81d4ec16998b663c570ac98f.jar" />
     </item>
     <item
         is-multidex="false"
@@ -180,6 +198,15 @@
         revision="25.0.3"
         sha1="398ec51345409df9e36a1de1a81f2b3ad5234bfb">
         <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/com.github.johnkil.android-appmsg-appmsg-1.2.0_dc83312ec9f75438c2e0b1b309dd064abb2c5c08.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/exploded-aar/com.android.support/support-v4/25.3.1/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.3"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="/Users/TomkidGames/MyGames/DevelopProjects/LR_AI_Map/OpenCV2411AS/app/build/intermediates/pre-dexed/debug/com.android.support-support-v4-25.3.1_09184a035a8d4ced7e171bc32766ef32229b3f8c.jar" />
     </item>
 
 </items>
