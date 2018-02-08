@@ -394,6 +394,9 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
     public void resetCanvas(int color) {
         if (originImg != null) {
             originImg.setTo(new Scalar(color));
+            if (mCameraIndex == LrDefines.PORT_READ_LASER) {
+                resetLaserFrame();
+            }
         }
     }
 
@@ -466,6 +469,7 @@ public class LrSocketSurfaceView extends LrSocketBridgeViewBase {
     public static native boolean getLaserFrame(LrSocketSurfaceView obj, long ioMat, String mappgm);
 
     public static native void saveLaserFrame();
+    public static native void resetLaserFrame();
 
     public static native void stopLaserSocket();
 

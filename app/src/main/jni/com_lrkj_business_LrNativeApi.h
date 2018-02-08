@@ -32,6 +32,8 @@ JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_stopDotSocket
 
 JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_saveLaserFrame
         (JNIEnv *env, jclass clazz);
+JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_resetLaserFrame
+        (JNIEnv *env, jclass clazz);
 
 JNIEXPORT jboolean JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getLaserFrame
     (JNIEnv *, jclass, jobject, jlong, jstring mappgm);

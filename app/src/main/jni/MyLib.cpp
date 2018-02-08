@@ -48,18 +48,17 @@ static char *jstringToChars(JNIEnv *env, jstring jstr) {
 }
 
 static //将char类型转换成jstring类型
-jstring char2jstring( JNIEnv* env,const char* str )
-{
+jstring char2jstring(JNIEnv *env, const char *str) {
     jsize len = strlen(str);
     jclass strClass = (env)->FindClass("java/lang/String");
-    const char* b = "utf-8";
+    const char *b = "utf-8";
     jstring encoding = (env)->NewStringUTF(b);
-    jmethodID ctorID = (env)->GetMethodID( strClass, "<init>", "([BLjava/lang/String;)V");
-    jbyteArray bytes = (env)->NewByteArray( len);
-    (env)->SetByteArrayRegion( bytes, 0, len, (jbyte*)str);
-    jstring res = (jstring)(env)->NewObject( strClass, ctorID, bytes, encoding);
+    jmethodID ctorID = (env)->GetMethodID(strClass, "<init>", "([BLjava/lang/String;)V");
+    jbyteArray bytes = (env)->NewByteArray(len);
+    (env)->SetByteArrayRegion(bytes, 0, len, (jbyte *) str);
+    jstring res = (jstring) (env)->NewObject(strClass, ctorID, bytes, encoding);
 
-    env->ReleaseByteArrayElements(bytes, (jbyte*)str, 0);
+    env->ReleaseByteArrayElements(bytes, (jbyte *) str, 0);
     env->DeleteLocalRef(strClass);
     env->DeleteLocalRef(encoding);
     env->DeleteLocalRef(bytes);
@@ -72,7 +71,7 @@ static void closeSocket(int s) {
 }
 
 /***********[LR]*****************************/
-static char* ServerIP = NULL;
+static char *ServerIP = NULL;
 static int Port_Dot = 4097;  // 该端口用来显示点云
 static int Port_Laser = 4100;
 static int SocketDot = -1;
@@ -80,8 +79,9 @@ static int SocketLaser = -1;
 static bool StopSocketDot = false;
 static bool StopSocketLaser = false;
 static bool Save_Laser = false;
+static bool Reset_Laser = false;
 
-static int createSocket(const char* ip, int port) {
+static int createSocket(const char *ip, int port) {
     if (ip == NULL) {
         return -1;
     }
@@ -92,8 +92,8 @@ static int createSocket(const char* ip, int port) {
 
     /* Configure our timeout to be 5 seconds */
     struct timeval timeouta = {8, 0};
-    setsockopt( skt, SOL_SOCKET, SO_SNDTIMEO, &timeouta, sizeof( timeouta ) );
-    setsockopt( skt, SOL_SOCKET, SO_RCVTIMEO, &timeouta, sizeof( timeouta ) );
+    setsockopt(skt, SOL_SOCKET, SO_SNDTIMEO, &timeouta, sizeof(timeouta));
+    setsockopt(skt, SOL_SOCKET, SO_RCVTIMEO, &timeouta, sizeof(timeouta));
 
     struct sockaddr_in serverAddr;
     socklen_t addrLen = sizeof(struct sockaddr_in);
@@ -108,36 +108,36 @@ static int createSocket(const char* ip, int port) {
     return skt;
 }
 
-static bool sendSignal( int sokt , int signal ) {
-    int bytes = 0 ;
-    if ((bytes = send(sokt,  &signal,  4 , 0)) == -1 ){
-        return false ;
+static bool sendSignal(int sokt, int signal) {
+    int bytes = 0;
+    if ((bytes = send(sokt, &signal, 4, 0)) == -1) {
+        return false;
     }
-    return true ;
+    return true;
 }
 
-static int recvSignal( int sokt  ) {
-    int bytes = 0 ;
-    int signal = -1 ;
-    if ((bytes = recv(sokt,  &signal,  4 , 0)) <= 0 ){
-        return -1 ;
+static int recvSignal(int sokt) {
+    int bytes = 0;
+    int signal = -1;
+    if ((bytes = recv(sokt, &signal, 4, 0)) <= 0) {
+        return -1;
     }
-    return  signal ;
+    return signal;
 }
 
-static float recvFloat( int sokt  ) {
-    int bytes = 0 ;
-    float signal = -1000000 ;
-    if ((bytes = recv(sokt,  &signal,  sizeof ( signal ) , 0)) <= 0 ){
+static float recvFloat(int sokt) {
+    int bytes = 0;
+    float signal = -1000000;
+    if ((bytes = recv(sokt, &signal, sizeof(signal), 0)) <= 0) {
     }
-    return  signal ;
+    return signal;
 }
 
-static bool printAck ( int sokt ) {
-    int bytes = 0 ;
-    char resuBuff [1024] ;
-    if ((bytes = recv(sokt, resuBuff , 1024 ,  0)) == -1 ){
-        return false ;
+static bool printAck(int sokt) {
+    int bytes = 0;
+    char resuBuff[1024];
+    if ((bytes = recv(sokt, resuBuff, 1024, 0)) == -1) {
+        return false;
     }
     return true;
 }
@@ -148,14 +148,13 @@ JNIEXPORT void JNICALL Java_com_lrkj_business_LrNativeApi_setRobotIp
 }
 
 JNIEXPORT jboolean JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getDotFrame
-        (JNIEnv *env, jclass clazz, jobject obj, jlong ioMat)
-{
+        (JNIEnv *env, jclass clazz, jobject obj, jlong ioMat) {
     if (ServerIP == NULL)
         return false;
 
     StopSocketDot = false;
 
-    int64_t  MAX_VEC_SIZE = 10000000; //最大不超过的点数
+    int64_t MAX_VEC_SIZE = 10000000; //最大不超过的点数
 
     if (SocketDot < 0) {
         if ((SocketDot = createSocket(ServerIP, Port_Dot)) < 0) {
@@ -171,8 +170,8 @@ JNIEXPORT jboolean JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getDotFrame
 
     int bytes = 0;
 
-    cv::Mat img = (*((cv::Mat*)ioMat));
-    img.setTo(cv::Scalar(255,255,255));
+    cv::Mat img = (*((cv::Mat *) ioMat));
+    img.setTo(cv::Scalar(255, 255, 255));
 
     int reconnect = 0;
     while (!StopSocketDot) {
@@ -187,10 +186,10 @@ JNIEXPORT jboolean JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getDotFrame
         int state = -1;
 
         //接收slam state
-        if ((bytes = recv(SocketDot, &state, sizeof(state) , MSG_WAITALL)) == -1) {
+        if ((bytes = recv(SocketDot, &state, sizeof(state), MSG_WAITALL)) == -1) {
             env->CallVoidMethod(obj, mid2, -1);
-            reconnect = 1 ;
-            continue ;
+            reconnect = 1;
+            continue;
         }
 
         env->CallVoidMethod(obj, mid2, state);
@@ -234,9 +233,10 @@ JNIEXPORT jboolean JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getDotFrame
 
             reconnect = 0;
 
-            int pointCnt = vec1[0].first ;
-            string str = " map points number : " + cv::format("%d", pointCnt );
-            putText(img, str, cv::Point(100, 100), cv::FONT_HERSHEY_PLAIN, 2,  cv::Scalar(0,0,255,255));
+            int pointCnt = vec1[0].first;
+            string str = " map points number : " + cv::format("%d", pointCnt);
+            putText(img, str, cv::Point(100, 100), cv::FONT_HERSHEY_PLAIN, 2,
+                    cv::Scalar(0, 0, 255, 255));
 
             //接收尺寸
             if ((bytes = recv(SocketDot, &sz2, sizeof(sz2), MSG_WAITALL)) == -1) {
@@ -275,10 +275,10 @@ JNIEXPORT jboolean JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getDotFrame
                        CV_AA);
 
             //mapsave
-            bool mapsave=false;
-            if ((bytes = recv(SocketDot, &mapsave, sizeof (mapsave) , MSG_WAITALL)) == -1) {
+            bool mapsave = false;
+            if ((bytes = recv(SocketDot, &mapsave, sizeof(mapsave), MSG_WAITALL)) == -1) {
                 std::cerr << "recv failed, received bytes = " << bytes << std::endl;
-                continue ;
+                continue;
             }
             if (mapsave) {
                 std::cout << "map save finish !!!!!!!" << std::endl;
@@ -288,8 +288,8 @@ JNIEXPORT jboolean JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getDotFrame
             // Call Java mid to draw
             env->CallVoidMethod(obj, mid);
 
-            img.setTo(cv::Scalar(255,255,255));
-        }catch (const std::exception &e) {
+            img.setTo(cv::Scalar(255, 255, 255));
+        } catch (const std::exception &e) {
             continue;
         }
     }
@@ -299,8 +299,7 @@ JNIEXPORT jboolean JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getDotFrame
 
 
 JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_stopDotSocket
-        (JNIEnv *, jclass)
-{
+        (JNIEnv *, jclass) {
     StopSocketDot = true;
     if (SocketDot >= 0) {
         close(SocketDot);
@@ -313,20 +312,23 @@ JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_saveLaserFrame
         (JNIEnv *env, jclass clazz) {
     Save_Laser = true;
 }
+JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_resetLaserFrame
+        (JNIEnv *env, jclass clazz) {
+    Reset_Laser = true;
+}
 
 JNIEXPORT jboolean JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getLaserFrame
-        (JNIEnv *env, jclass clazz, jobject obj, jlong ioMat, jstring mappgm)
-{
+        (JNIEnv *env, jclass clazz, jobject obj, jlong ioMat, jstring mappgm) {
     Save_Laser = false;
 
     if (ServerIP == NULL)
         return false;
 
-    char* mapName = jstringToChars(env, mappgm);
+    char *mapName = jstringToChars(env, mappgm);
 
     StopSocketLaser = false;
 
-    int64_t  MAX_VEC_SIZE = 10000000; //最大不超过的点数
+    int64_t MAX_VEC_SIZE = 10000000; //最大不超过的点数
 
     if (SocketLaser < 0) {
         if ((SocketLaser = createSocket(ServerIP, Port_Laser)) < 0) {
@@ -337,67 +339,74 @@ JNIEXPORT jboolean JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getLaserFrame
     jmethodID mid = env->GetMethodID(clazz, "postLaserFrameFromNative", "()V");
     jmethodID mid2 = env->GetMethodID(clazz, "saveLaserFrameFromNativeDone", "()V");
 
-    int bytes = 0;
-    int mapWidth =0 ;	// width of the map
-    int mapHeight =0 ;	// height of the map
-
-    // 获取地图
+    // 获取点云地图
+    cv::Mat pc;
     float orix, oriy;
+    int pw, ph;
     int SocketGetMap = createSocket(ServerIP, 4103);
     if (SocketGetMap < 0)
         return 0;
-    if ( sendSignal ( SocketGetMap , 1006)  ) {
+    if (sendSignal(SocketGetMap, 1006)) {
 
-        int i = recvSignal ( SocketGetMap  ) ;
+        int i = recvSignal(SocketGetMap);
 
         if (i != -1) {
-            if (i ==0) {
-                std::cout << "getMap fail" <<std::endl ;
-            } else if ( i ==1 ) {
-                orix = recvFloat (SocketGetMap) ;
-                if ( orix < -10000) {
-                    std::cout << "recv float error " << std::endl ;
+            if (i == 0) {
+                std::cout << "getMap fail" << std::endl;
+            } else if (i == 1) {
+                orix = recvFloat(SocketGetMap);
+                if (orix < -10000) {
+                    std::cout << "recv float error " << std::endl;
                     return 0;
                 }
 
 
-                oriy = recvFloat (SocketGetMap) ;
-                if ( oriy < -10000) {
-                    std::cout << "recv float error " << std::endl ;
+                oriy = recvFloat(SocketGetMap);
+                if (oriy < -10000) {
+                    std::cout << "recv float error " << std::endl;
                     return 0;
                 }
 
-                int width = recvSignal (SocketGetMap) ;
+                int width = recvSignal(SocketGetMap);
                 if (width == -1) {
-                    std::cout << "recv  error " << std::endl ;
+                    std::cout << "recv  error " << std::endl;
                     return 0;
                 }
 
 
-                int height = recvSignal (SocketGetMap) ;
+                int height = recvSignal(SocketGetMap);
                 if (height == -1) {
-                    std::cout << "recv  error " << std::endl ;
+                    std::cout << "recv  error " << std::endl;
                     return 0;
                 }
 
-                std::cout << " orix: "<<orix << " y: " <<oriy << " w:" << width << " h: "<< height << std::endl;
+                std::cout << " orix: " << orix << " y: " << oriy << " w:" << width << " h: "
+                          << height << std::endl;
 
-                img = cv::Mat::zeros( height ,  width , CV_8UC1);    // CV_8UC1 means that each pixels in the image is type unsigned char
-                int imgSize = img.total() * img.elemSize();
-                uchar *iptr = img.data;
+                pc = cv::Mat::zeros(height, width, CV_8UC1);
+                int imgSize = pc.total() * pc.elemSize();
+                uchar *iptr = pc.data;
 
-                //                      cout << "imgSize " << imgSize<< endl;
-                if ((bytes = recv(sokt, iptr, imgSize , MSG_WAITALL)) <=0) {
-                    std::cerr << "recv failed, received bytes = " << bytes << std::endl;
-
-                    return 0 ;
+                if (recv(SocketGetMap, iptr, imgSize, MSG_WAITALL) <= 0) {
+                    std::cerr << "recv failed" << std::endl;
+                    return 0;
                 }
-                cv::imwrite ( "theMap.pgm" , img ) ;
+                pw = width;
+                ph = height;
+                //cv::imwrite ( "theMap.pgm" , dotMap ) ;
             }
         }
+    }
+    cv::Mat white = cv::Mat(ph, pw, CV_8UC1, cv::Scalar(255));
+    pc = white - pc; //图像反向， 黑->白 ， 白->黑
+
+
+    int bytes = 0;
+    int mapWidth = 0;    // width of the map
+    int mapHeight = 0;    // height of the map
 
     //获取地图宽度
-    if ((bytes = recv(SocketLaser, &mapWidth, sizeof (mapWidth), MSG_WAITALL)) <= 0){
+    if ((bytes = recv(SocketLaser, &mapWidth, sizeof(mapWidth), MSG_WAITALL)) <= 0) {
         std::cerr << "bytes = " << bytes << std::endl;
         Java_com_lrkj_utils_LrSocketSurfaceView_stopLaserSocket(NULL, NULL);
         return 0;
@@ -405,7 +414,7 @@ JNIEXPORT jboolean JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getLaserFrame
     }
 
     //获取地图高度
-    if ((bytes = recv(SocketLaser, &mapHeight, sizeof (mapHeight), MSG_WAITALL)) <= 0){
+    if ((bytes = recv(SocketLaser, &mapHeight, sizeof(mapHeight), MSG_WAITALL)) <= 0) {
         std::cerr << "bytes = " << bytes << std::endl;
         Java_com_lrkj_utils_LrSocketSurfaceView_stopLaserSocket(NULL, NULL);
         return 0;
@@ -413,68 +422,98 @@ JNIEXPORT jboolean JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getLaserFrame
 
     cv::Mat lasermap = cv::Mat(mapHeight, mapWidth, CV_8UC1, cv::Scalar(0));
     cv::Mat pose = cv::Mat(mapHeight, mapWidth, CV_8UC1, cv::Scalar(0));
+    cv::Mat trajectory = cv::Mat(mapHeight, mapWidth, CV_8UC1, cv::Scalar(0));
+    if (!(pw == mapWidth && ph == mapHeight)) { //地图尺寸不一样的，有可能是特征点地图输入错误，退出程序
+        return -1;
+    }
+    cv::Mat covisibleMap = cv::Mat(mapHeight, mapWidth, CV_8UC1,
+                                   cv::Scalar(0));   //共试图，用于保存特征点和激光同时能看到的静态障碍
+    cv::Mat laserPoint = cv::Mat(mapHeight, mapWidth, CV_8UC1, cv::Scalar(0));    // 用于画每针看到的激光点
 
-    cv::Mat img = (*((cv::Mat*)ioMat));
+    // java map init
+    cv::Mat img = (*((cv::Mat *) ioMat));
     cv::Size ResImgSiz = cv::Size(img.cols, img.rows);
 
     while (!StopSocketLaser) {
         //获取x坐标
-        int x_cam =0 ;	// height of the map
-        if ((bytes = recv(SocketLaser, &x_cam, sizeof (x_cam), MSG_WAITALL)) <= 0){
+        int x_cam = 0;    // height of the map
+        if ((bytes = recv(SocketLaser, &x_cam, sizeof(x_cam), MSG_WAITALL)) <= 0) {
             std::cerr << "bytes = " << bytes << std::endl;
             Java_com_lrkj_utils_LrSocketSurfaceView_stopLaserSocket(NULL, NULL);
             return 0;
         }
 
         //获取y坐标
-        int y_cam =0 ;	// height of the map
-        if ((bytes = recv(SocketLaser, &y_cam, sizeof (y_cam), MSG_WAITALL)) <= 0){
+        int y_cam = 0;    // height of the map
+        if ((bytes = recv(SocketLaser, &y_cam, sizeof(y_cam), MSG_WAITALL)) <= 0) {
             std::cerr << "bytes = " << bytes << std::endl;
             Java_com_lrkj_utils_LrSocketSurfaceView_stopLaserSocket(NULL, NULL);
             return 0;
         }
 
-        std::vector< std::pair< int , int> > laser_dots;
-        int sz=0;
+        std::vector<std::pair<int, int> > laser_dots;
+        int sz = 0;
 
         //获取点云的尺寸
-        if ((bytes = recv(SocketLaser, &sz, sizeof(sz) , MSG_WAITALL)) == -1) {
+        if ((bytes = recv(SocketLaser, &sz, sizeof(sz), MSG_WAITALL)) == -1) {
             std::cerr << "recv failed, received bytes = " << bytes << std::endl;
         }
 
         //获取点云
         if (sz > MAX_VEC_SIZE) sz = MAX_VEC_SIZE;
-        laser_dots.resize( sz );
-        if ((bytes = recv(SocketLaser, &(*laser_dots.begin()), sz * 8  , MSG_WAITALL)) == -1) {
+        laser_dots.resize(sz);
+        if ((bytes = recv(SocketLaser, &(*laser_dots.begin()), sz * 8, MSG_WAITALL)) == -1) {
             std::cerr << "recv failed, received bytes = " << bytes << std::endl;
         }
+        laserPoint.setTo(cv::Scalar(0));
 
-        // 画激光地图， 画图方式: 连线当前坐标（x_cam, y_cam）和点云中的所有点
-        for(int i=0; i<laser_dots.size(); i++)
-        {
+        for (int i = 0; i < laser_dots.size(); i++) {
             int x_p = laser_dots[i].first;
             int y_p = laser_dots[i].second;
-            if(x_p >= 0 && y_p >=0 && x_p < lasermap.cols && y_p < lasermap.rows)
-            {
-                cv::line(lasermap,cv::Point(x_cam,y_cam),cv::Point(x_p,y_p),cv::Scalar(255));
-                lasermap.at<uchar>(y_p,x_p) = 0;
+
+            if (x_p >= 0 && y_p >= 0 && x_p < lasermap.cols && y_p < lasermap.rows) {
+                //lasermap 画布 画激光线
+                cv::line(lasermap, cv::Point(x_cam, y_cam), cv::Point(x_p, y_p), cv::Scalar(255));
+                lasermap.at<uchar>(y_p, x_p) = 0;
+
+                //laserdot画布 画激光点
+                cv::circle(laserPoint, cv::Point(x_p, y_p), 2, cv::Scalar(255), -1);
+                lasermap.at<uchar>(y_p, x_p) = 0;
             }
         }
 
-        cv::circle ( pose , cv::Point ( x_cam , y_cam) ,  3 , cv::Scalar(255) , -1 ) ;
+        cv::Mat res;
+        cv::bitwise_and(laserPoint, pc, res); // laserpoint 图层和 pointcloud 图层 按位与运算。
+        covisibleMap = covisibleMap + res; // 结果添加到共视图上
 
-        cv::resize(lasermap-pose, img, ResImgSiz);
+        //当前位置图层
+        cv::circle(pose, cv::Point(x_cam, y_cam), 4, cv::Scalar(255), -1);
+        //轨迹图层
+        cv::circle(trajectory, cv::Point(x_cam, y_cam), 8, cv::Scalar(175), -1);
+
+        //最终地图图层
+        cv::Mat finalMap;
+
+        //将轨迹经过的位置都涂成可通行区域
+        cv::bitwise_or(lasermap - covisibleMap, trajectory * 10, finalMap);
+
+        cv::resize(finalMap - trajectory - pose, img, ResImgSiz);
 
         if (Save_Laser) {
             //保存到本地
             cv::imwrite(string("/mnt/sdcard/com.lrkj.ctrl/maps/") + string(mapName) + ".pgm",
-                        lasermap-pose);
+                        finalMap - trajectory);
             cv::imwrite(string("/mnt/sdcard/com.lrkj.ctrl/maps/") + string(mapName) + ".jpg",
                         img);
-            std::cout << "save map done!!!!" << std::endl ;
+            std::cout << "save map done!!!!" << std::endl;
             Save_Laser = false;
 
             env->CallVoidMethod(obj, mid2);
+        }
+
+        if (Reset_Laser) {
+            lasermap.setTo ( cv::Scalar ( 0)  ) ;
+            Reset_Laser = false;
         }
 
         // Call Java mid to draw
@@ -486,8 +525,7 @@ JNIEXPORT jboolean JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getLaserFrame
 
 
 JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_stopLaserSocket
-        (JNIEnv *, jclass)
-{
+        (JNIEnv *, jclass) {
     StopSocketLaser = true;
     if (SocketLaser >= 0) {
         close(SocketLaser);
@@ -499,8 +537,7 @@ JNIEXPORT void JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_stopLaserSocket
 // Ge all maps
 
 JNIEXPORT jint JNICALL Java_com_lrkj_business_LrNativeApi_getAllMaps
-        (JNIEnv *env, jclass clazz, jint mode)
-{
+        (JNIEnv *env, jclass clazz, jint mode) {
     int sokt = -1;
     try {
         sokt = createSocket(ServerIP, 4101);
@@ -594,7 +631,7 @@ JNIEXPORT jint JNICALL Java_com_lrkj_business_LrNativeApi_getAllMaps
                     cv::imwrite(
                             string("/mnt/sdcard/com.lrkj.ctrl/maps/") + string(mapName) + ".jpg",
                             img2);
-                }else if (mode == 1) {
+                } else if (mode == 1) {
                     cv::imwrite(
                             string("/mnt/sdcard/com.lrkj.ctrl/navi/") + string(mapName) + ".pgm",
                             img);
@@ -608,7 +645,7 @@ JNIEXPORT jint JNICALL Java_com_lrkj_business_LrNativeApi_getAllMaps
             close(sokt);
         }
         return mapCnt;
-    }catch (const std::exception &e) {
+    } catch (const std::exception &e) {
         if (sokt >= 0) {
             close(sokt);
         }
@@ -620,8 +657,7 @@ JNIEXPORT jint JNICALL Java_com_lrkj_business_LrNativeApi_getAllMaps
 // Send edited map
 
 JNIEXPORT jint JNICALL Java_com_lrkj_business_LrNativeApi_sendEditMap
-        (JNIEnv *env, jclass clazz, jstring mname, jstring mapPath)
-{
+        (JNIEnv *env, jclass clazz, jstring mname, jstring mapPath) {
     if (!mapPath)
         return 0;
     try {
@@ -631,7 +667,7 @@ JNIEXPORT jint JNICALL Java_com_lrkj_business_LrNativeApi_sendEditMap
 
         string mapName = string(jstringToChars(env, mapPath)); //修改过的地图的名字
         string mapNN = string(jstringToChars(env, mname));
-        cv::Mat img = cv::imread( mapName, CV_8UC1);  //读取本地修改过得地图
+        cv::Mat img = cv::imread(mapName, CV_8UC1);  //读取本地修改过得地图
 
         /*
         signal meaning:
@@ -648,46 +684,46 @@ JNIEXPORT jint JNICALL Java_com_lrkj_business_LrNativeApi_sendEditMap
 
         if (signal == 2018) {
             // send the size of  mapName ; 发送地图名称在所占字节个数
-            int mapNameLen = mapNN.size() ;
-            if ((bytes = send(sokt, &mapNameLen,  sizeof(mapNameLen) , 0)) <= 0){
+            int mapNameLen = mapNN.size();
+            if ((bytes = send(sokt, &mapNameLen, sizeof(mapNameLen), 0)) <= 0) {
                 return 0;
             }
 
             // send the name of the editedMap  发送地图名称
-            if ((bytes = send(sokt, mapNN.c_str(), mapNN.size(), 0)) <= 0){
+            if ((bytes = send(sokt, mapNN.c_str(), mapNN.size(), 0)) <= 0) {
                 return 0;
             }
 
-            usleep (50000);
+            usleep(50000);
 
-            int width = img.cols ;
-            int height = img.rows ;
+            int width = img.cols;
+            int height = img.rows;
 
             //send map width 发送地图宽度
-            if ((bytes = send(sokt, &width, sizeof(width), 0)) <= 0){
-                return 0 ;
+            if ((bytes = send(sokt, &width, sizeof(width), 0)) <= 0) {
+                return 0;
             }
 
             //send map height 发送地图高度
-            if ((bytes = send(sokt, &height, sizeof(height), 0)) <= 0){
+            if ((bytes = send(sokt, &height, sizeof(height), 0)) <= 0) {
                 return 0;
             }
 
             //send map data 发送地图数据
             int imgSize = img.total() * img.elemSize();
 
-            if ( imgSize != width * height * 1 ){
+            if (imgSize != width * height * 1) {
                 return 0;
             }
 
-            if ((bytes = send(sokt, img.data, imgSize, 0)) <= 0){
-                return 0 ;
+            if ((bytes = send(sokt, img.data, imgSize, 0)) <= 0) {
+                return 0;
             }
 
             //recieve ack information
             //获取反馈信息
-            char ackBuff [1024] ;
-            if ((bytes = recv(sokt, ackBuff, 1024, 0)) <= 0){
+            char ackBuff[1024];
+            if ((bytes = recv(sokt, ackBuff, 1024, 0)) <= 0) {
                 return 0;
             }
         }
@@ -696,7 +732,7 @@ JNIEXPORT jint JNICALL Java_com_lrkj_business_LrNativeApi_sendEditMap
             close(sokt);
         }
         return 1;
-    }catch (const std::exception &e) {
+    } catch (const std::exception &e) {
         return 0;
     }
 }
@@ -705,7 +741,7 @@ JNIEXPORT jboolean JNICALL Java_com_lrkj_business_LrNativeApi_writeBitmapToPgm
         (JNIEnv *env, jclass, jstring path, jintArray buf, int w, int h) {
 
     jint *pixels = env->GetIntArrayElements(buf, NULL);
-    char* pp = jstringToChars(env, path);
+    char *pp = jstringToChars(env, path);
     if (pixels == NULL || pp == NULL) {
         return false;
     }
@@ -714,7 +750,7 @@ JNIEXPORT jboolean JNICALL Java_com_lrkj_business_LrNativeApi_writeBitmapToPgm
         cv::Mat imgData(h, w, CV_8UC4, pixels);
         cv::cvtColor(imgData, imgData, CV_RGBA2GRAY);
         cv::imwrite(string(pp), imgData);
-    }catch (const std::exception &e) {
+    } catch (const std::exception &e) {
         return false;
     }
     return true;
