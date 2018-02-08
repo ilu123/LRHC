@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LRKJ</string>
+    <string name="app_name">和创懒人</string>
 
     <string name="dialog_ip_hint">请输入IP地址</string>
     <string name="dialog_ip_btn_conn">开始连接</string>

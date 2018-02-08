@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import com.lrkj.widget.MyRxDialog;
 import com.mobeta.android.dslv.DragSortListView;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,8 +63,94 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
         mListView.setRemoveListener(onMore);
 
         if (mIsNavi) {
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    final File f = mFiles.get(position);
+                    new MyRxDialog(LrActAllMap.this)
+                            .setTitle("提示")
+                            .setMessage("在此地图导航？")
+                            .setPositiveText("确定")
+                            .setNegativeText("取消")
+                            .dialogToObservable()
+                            .subscribe(new Consumer<Integer>() {
+                                @Override
+                                public void accept(Integer integer) throws Exception {
+                                    switch (integer) {
+                                        case MyRxDialog.POSITIVE:
+                                            Intent i = new Intent(LrActAllMap.this, LrActNavi.class);
+                                            i.putExtra("map", f.getName().replaceAll(".jpg", ""));
+                                            i.putExtra("ip", mIp);
+                                            startActivity(i);
+                                            break;
+                                    }
+                                }
+                            });
+                }
+            });
             loadMapDatas();
         } else {
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    final int pos = position;
+                    final File f = mFiles.get(position);
+                    new MyRxDialog(LrActAllMap.this)
+                            .setTitle("选择操作")
+                            .setPositiveText("上传")
+                            .setNegativeText("编辑")
+                            .setNeutralText("删除地图")
+                            .dialogToObservable()
+                            .subscribe(new Consumer<Integer>() {
+                                @Override
+                                public void accept(Integer integer) throws Exception {
+                                    switch (integer) {
+                                        case MyRxDialog.NEUTRAL:
+                                            deleteMap(f, pos);
+                                            break;
+                                        case MyRxDialog.NEGATIVE:
+                                            String test = f.getAbsolutePath().replaceAll(".jpg", ".pgm");
+                                            if (new File(test).exists()) {
+                                                Intent i = new Intent(LrActAllMap.this, LrActEditMap.class);
+                                                i.putExtra("map", test);
+                                                startActivity(i);
+                                            } else {
+                                                LrToast.toast("地图不存在！");
+                                            }
+                                            break;
+                                        case MyRxDialog.POSITIVE:
+                                            final String mapPath = f.getAbsolutePath().replaceAll(".jpg", ".pgm");
+                                            final String mapName = f.getName().replaceAll(".jpg", "");
+                                            LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(LrActAllMap.this)
+                                                    .setMessage("上传中...")
+                                                    .setCancelable(false)
+                                                    .setCancelOutside(false);
+                                            final LoadingDailog dialog = loadBuilder.create();
+                                            dialog.show();
+
+                                            new Thread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    final int result = LrNativeApi.sendEditMap(mapName, mapPath);
+                                                    runOnUiThread(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            dialog.dismiss();
+                                                            if (result == 1) {
+                                                                LrToast.toast("上传成功！");
+                                                            } else {
+                                                                LrToast.toast("上传失败！");
+                                                            }
+                                                        }
+                                                    });
+                                                }
+                                            }).start();
+                                            break;
+                                    }
+                                }
+                            });
+                }
+            });
             updateSceneList();
         }
     }
@@ -279,7 +367,7 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
         v = convertView.findViewById(R.id.btn_nav);
         v.setTag("nav-" + position);
         v.setOnClickListener(this);
-        if (!mIsNavi) v.setVisibility(View.GONE);
+        v.setVisibility(View.GONE);
 
 
         return convertView;
@@ -314,8 +402,9 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.name || id == R.id.time) {
-            Collections.sort(mFiles, new FileSortComparator(id == R.id.name ? "name" : "time", !mSortAsc));
-            updateSceneList();
+            mSortAsc = !mSortAsc;
+            Collections.sort(mFiles, new FileSortComparator(id == R.id.name ? "name" : "time", mSortAsc));
+            notifyDataSetChanged();
             return;
         }
         Object o = v.getTag();
@@ -323,34 +412,7 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
             final String[] t = (o + "").split("-");
             final File f = mFiles.get(Integer.parseInt(t[1]));
             if (t[0].equalsIgnoreCase("del")) {
-                new MyRxDialog(this)
-                        .setTitle("提示")
-                        .setMessage("确定删除地图吗？")
-                        .setPositiveText("确定")
-                        .setNegativeText("取消")
-                        .dialogToObservable()
-                        .subscribe(new Consumer<Integer>() {
-                            @Override
-                            public void accept(Integer integer) throws Exception {
-                                switch (integer) {
-                                    case MyRxDialog.POSITIVE:
-                                        if (LrRobot.sendCmd(mIp, LrDefines.PORT_MAPS, 2019, f.getName().replaceAll(".jpg", ""))) {
-                                            mFiles.remove(Integer.parseInt(t[1]));
-                                            f.delete();
-                                            new File(f.getAbsolutePath().replaceAll(".jpg", ".pgm")).delete();
-                                            try {
-                                                new File(f.getAbsolutePath().replaceFirst("/maps/", "/navi/")).delete();
-                                                new File(f.getAbsolutePath().replaceFirst("/maps/", "/navi/").replaceAll(".jpg", ".pgm")).delete();
-                                            } catch (Throwable e) {
-                                            }
-                                            notifyDataSetChanged();
-                                        }else{
-                                            LrToast.toast("地图删除命令失败！");
-                                        }
-                                        break;
-                                }
-                            }
-                        });
+                this.deleteMap(f, Integer.parseInt(t[1]));
             } else if (t[0].equalsIgnoreCase("edit")) {
                 String test = f.getAbsolutePath().replaceAll(".jpg", ".pgm");
                 if (new File(test).exists()) {
@@ -394,6 +456,37 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
                 startActivity(i);
             }
         }
+    }
+
+    private void deleteMap(final File f, final int pos){
+        new MyRxDialog(this)
+                .setTitle("提示")
+                .setMessage("确定删除地图吗？")
+                .setPositiveText("确定")
+                .setNegativeText("取消")
+                .dialogToObservable()
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        switch (integer) {
+                            case MyRxDialog.POSITIVE:
+                                if (LrRobot.sendCmd(mIp, LrDefines.PORT_MAPS, 2019, f.getName().replaceAll(".jpg", ""))) {
+                                    mFiles.remove(pos);
+                                    f.delete();
+                                    new File(f.getAbsolutePath().replaceAll(".jpg", ".pgm")).delete();
+                                    try {
+                                        new File(f.getAbsolutePath().replaceFirst("/maps/", "/navi/")).delete();
+                                        new File(f.getAbsolutePath().replaceFirst("/maps/", "/navi/").replaceAll(".jpg", ".pgm")).delete();
+                                    } catch (Throwable e) {
+                                    }
+                                    notifyDataSetChanged();
+                                }else{
+                                    LrToast.toast("地图删除命令失败！");
+                                }
+                                break;
+                        }
+                    }
+                });
     }
     /*------------------------ End ------------------------*/
 }

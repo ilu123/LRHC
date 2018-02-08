@@ -199,8 +199,11 @@ public class PaintMapView extends View {
         synchronized (_state) {
             Bitmap old = _state._paintedBitmap;
             _state._paintedBitmap = DrawUtils.replaceBitmapColor(old, 0xFFAFAFAF, 0xFFFFFFFF);
+            _state._canvas.setBitmap(_state._paintedBitmap);
             old.recycle();
             old = null;
+
+            invalidate();
         }
     }
 

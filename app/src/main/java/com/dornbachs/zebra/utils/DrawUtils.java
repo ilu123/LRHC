@@ -64,9 +64,9 @@ public final class DrawUtils {
 				//在这说明一下 如果color 是全透明 或者全黑 返回值为 0
 				//getPixel()不带透明通道 getPixel32()才带透明部分 所以全透明是0x00000000
 				//而不透明黑色是0xFF000000 如果不计算透明部分就都是0了
-				int color = mBitmap.getPixel(j, i);
+				int color = mBitmap.getPixel(j, i) & 0x00FFFFFF;
 				//将颜色值存在一个数组中 方便后面修改
-				if (color == oldColor) {
+				if (color < 0xDDDDDD && color > 0x555555) { //这里范围防止毛边
 					mBitmap.setPixel(j, i, newColor);  //将白色替换成透明色
 				}
 
