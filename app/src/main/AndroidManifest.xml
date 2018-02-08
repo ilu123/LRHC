@@ -35,6 +35,11 @@
             android:configChanges="orientation"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity
@@ -60,11 +65,7 @@
         <activity
             android:name="com.lrkj.views.LrActAllMap"
             android:configChanges="orientation">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter></activity>
+        </activity>
         <activity
             android:name="com.lrkj.views.LrActSystem"
             android:configChanges="orientation"></activity>
