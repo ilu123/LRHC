@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.devspark.appmsg.AppMsg;
 import com.dornbachs.zebra.TGApplication;
+import com.lrkj.utils.CrashHandler;
 import com.lrkj.utils.LrToast;
 
 import java.io.File;
@@ -25,7 +26,7 @@ public class LrApplication extends TGApplication {
     public void onCreate() {
         super.onCreate();
         sApplication = this;
-
+        CrashHandler.getInstance().init(this, true);
         mkMapFolder();
     }
 

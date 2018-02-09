@@ -259,6 +259,12 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
         new Thread(new Runnable() {
             @Override
             public void run() {
+                File folder = new File(Prex);
+                File[] fileArray = folder.listFiles();
+                if (fileArray != null)
+                    for (File f : fileArray) {
+                        f.delete();
+                    }
                 LrNativeApi.getAllMaps(mIsNavi ? 1 : 0);
                 runOnUiThread(new Runnable() {
                     @Override

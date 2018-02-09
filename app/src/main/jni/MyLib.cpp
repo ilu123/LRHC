@@ -424,7 +424,7 @@ JNIEXPORT jboolean JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getLaserFrame
     cv::Mat pose = cv::Mat(mapHeight, mapWidth, CV_8UC1, cv::Scalar(0));
     cv::Mat trajectory = cv::Mat(mapHeight, mapWidth, CV_8UC1, cv::Scalar(0));
     if (!(pw == mapWidth && ph == mapHeight)) { //地图尺寸不一样的，有可能是特征点地图输入错误，退出程序
-        return -1;
+        return 0;
     }
     cv::Mat covisibleMap = cv::Mat(mapHeight, mapWidth, CV_8UC1,
                                    cv::Scalar(0));   //共试图，用于保存特征点和激光同时能看到的静态障碍

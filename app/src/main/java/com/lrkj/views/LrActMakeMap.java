@@ -174,11 +174,7 @@ public class LrActMakeMap extends LrBaseAct implements LrSocketBridgeViewBase.Cv
                     Socket socket = new Socket();
                     try {
                         socket.setReuseAddress(true);
-                        socket.setSoTimeout(5000);
-                        socket.setTcpNoDelay(true);
-                    }catch (Throwable e) {
-
-                    }
+                    }catch (Throwable e) {}
                     boolean startOK = LrRobot.sendCommand(mRobotIp, 1079, null);
                     try {
                         Thread.sleep(2000);
@@ -196,7 +192,18 @@ public class LrActMakeMap extends LrBaseAct implements LrSocketBridgeViewBase.Cv
                             //setStatus("无法控制移动");
                             continue;
                         }
-                        if (!socket.isConnected() && !mStopThread) {
+                        if (socket.isClosed() && !mStopThread) {
+                            try {
+                                socket = new Socket();
+                                try {
+                                    socket.setReuseAddress(true);
+                                }catch (Throwable e) {}
+                                socket.connect(new InetSocketAddress(mRobotIp, 4108));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            continue;
+                        }else if (!socket.isConnected() && !mStopThread) {
                             try {
                                 socket.connect(new InetSocketAddress(mRobotIp, 4108));
                             } catch (IOException e) {

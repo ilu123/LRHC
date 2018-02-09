@@ -16,6 +16,7 @@ import com.lrkj.utils.LrToast;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
@@ -45,11 +46,23 @@ public class LrMsgService extends Service {
                 public void run() {
                     Socket mSocket = null;
                     mSocket = new Socket();
+                    try {
+                        mSocket.setReuseAddress(true);
+                    } catch (SocketException e) {
+                        e.printStackTrace();
+                    }
                     byte[] buff = new byte[1024];
                     while (!mStop) {
                         try {
-                            if (!mSocket.isConnected()) {
-                                mSocket.setReuseAddress(true);
+                            if (mSocket.isClosed()) {
+                                mSocket = new Socket();
+                                try {
+                                    mSocket.setReuseAddress(true);
+                                } catch (SocketException e) {
+                                    e.printStackTrace();
+                                }
+                                mSocket.connect(new InetSocketAddress(ip, port));
+                            }else if (!mSocket.isConnected()) {
                                 mSocket.connect(new InetSocketAddress(ip, port));
                             }
                             int len = 0;
@@ -59,8 +72,8 @@ public class LrMsgService extends Service {
                                     mHandler.sendMessage(mHandler.obtainMessage(1, new String(buff)));
                             }
                         } catch (Throwable e) {
-                            if (mHandler != null)
-                                mHandler.sendMessage(mHandler.obtainMessage(1, e.getMessage()));
+//                            if (mHandler != null)
+//                                mHandler.sendMessage(mHandler.obtainMessage(1, e.getMessage()));
                         }
                     }
                     if (mSocket != null) {
