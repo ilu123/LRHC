@@ -146,7 +146,6 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
                             });
                 }
             });
-            updateSceneList();
         }
     }
 
