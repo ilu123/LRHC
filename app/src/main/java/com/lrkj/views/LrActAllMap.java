@@ -1,6 +1,5 @@
 package com.lrkj.views;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.DataSetObservable;
 import android.database.DataSetObserver;
@@ -12,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.tu.loadingdialog.LoadingDailog;
@@ -22,10 +22,8 @@ import com.lrkj.ctrl.R;
 import com.lrkj.defines.LrDefines;
 import com.lrkj.utils.LrToast;
 import com.lrkj.widget.MyRxDialog;
-import com.mobeta.android.dslv.DragSortListView;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,7 +34,7 @@ import io.reactivex.functions.Consumer;
 
 public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickListener {
 
-    DragSortListView mListView;
+    ListView mListView;
 
     String Prex = "/mnt/sdcard/com.lrkj.ctrl/";
     final String PrexF = "/mnt/sdcard/com.lrkj.ctrl/";
@@ -57,10 +55,8 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
         mIsNavi = getIntent().getBooleanExtra("navi", false);
         Prex += (mIsNavi ? "navi/" : "maps/");
         ((TextView) findViewById(R.id.tvTitle)).setText(mIsNavi ? "地图导航" : "地图管理");
-        mListView = (DragSortListView) findViewById(android.R.id.list);
+        mListView = (ListView) findViewById(android.R.id.list);
         mListView.setAdapter(this);
-        mListView.setDragEnabled(false);
-        mListView.setRemoveListener(onMore);
 
         if (mIsNavi) {
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -279,14 +275,6 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
             }
         }).start();
     }
-
-    private DragSortListView.RemoveListener onMore = new DragSortListView.RemoveListener() {
-        @Override
-        public boolean remove(final int which) {
-
-            return true;
-        }
-    };
 
     public void onDestroy() {
         super.onDestroy();
