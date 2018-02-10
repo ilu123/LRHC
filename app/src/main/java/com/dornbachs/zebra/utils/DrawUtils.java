@@ -21,6 +21,12 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public final class DrawUtils {
 	// Make dest a resized copy of src. This maintains the aspect ratio. and cuts
@@ -39,6 +45,26 @@ public final class DrawUtils {
 		mDestSrc.invert(mSrcDest);
 
 		canvas.drawBitmap(src, mSrcDest, new Paint(Paint.DITHER_FLAG));
+	}
+
+	/**
+	 * Save a bitmap to JPEG file format.
+	 * @Author ZTB 2013-8-23
+	 */
+	public static void save2JPEG(Bitmap bitmap, String path) {
+		File file = new File(path);
+		try {
+			FileOutputStream out = new FileOutputStream(file);
+			Bitmap b = bitmap.createScaledBitmap(bitmap, 48, 48, false);
+			if (b.compress(Bitmap.CompressFormat.JPEG, 80, out)) {
+				out.flush();
+				out.close();
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -66,7 +92,7 @@ public final class DrawUtils {
 				//而不透明黑色是0xFF000000 如果不计算透明部分就都是0了
 				int color = mBitmap.getPixel(j, i) & 0x00FFFFFF;
 				//将颜色值存在一个数组中 方便后面修改
-				if (color < 0xDDDDDD && color > 0x555555) { //这里范围防止毛边
+				if (color < 0xFFFFFF && color > 0x0) { //这里范围防止毛边
 					mBitmap.setPixel(j, i, newColor);  //将白色替换成透明色
 				}
 

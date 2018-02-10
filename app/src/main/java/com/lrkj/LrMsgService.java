@@ -52,6 +52,11 @@ public class LrMsgService extends Service {
                         e.printStackTrace();
                     }
                     byte[] buff = new byte[1024];
+                    try {
+                        Thread.sleep(4000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     while (!mStop) {
                         try {
                             if (mSocket.isClosed()) {
@@ -72,6 +77,7 @@ public class LrMsgService extends Service {
                                     mHandler.sendMessage(mHandler.obtainMessage(1, new String(buff)));
                             }
                         } catch (Throwable e) {
+                            e.printStackTrace();
 //                            if (mHandler != null)
 //                                mHandler.sendMessage(mHandler.obtainMessage(1, e.getMessage()));
                         }
@@ -113,6 +119,7 @@ public class LrMsgService extends Service {
                             if (mAppMsg.isShowing()) {
                                 mAppMsg.setText(m);
                             } else {
+                                mAppMsg.setText(m);
                                 mAppMsg.show();
                             }
                         }

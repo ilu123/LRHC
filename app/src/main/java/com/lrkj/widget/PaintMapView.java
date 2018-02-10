@@ -76,7 +76,8 @@ public class PaintMapView extends View {
         // Proportion of progress in various places.
         // The sum of all progress should be 100.
         final int PROGRESS_RESIZE = 10;
-        final int PROGRESS_SCAN = 90;
+        final int PROGRESS_SCAN = 60;
+        Progress.sendIncrementProgress(progressHandler, PROGRESS_SCAN);
 
         int w = 0;
         int h = 0;
@@ -125,17 +126,8 @@ public class PaintMapView extends View {
             painted = _state._paintedBitmap.copy(_state._paintedBitmap.getConfig(), true);
         }
 
-        // Calculate the proportions of the result and create it. The result
-        // has more pixels than the bitmap we paint, it has the maximum
-        // number of pixels possible with the original outline (while
-        // maintaining the same aspect ratio as the drawing).
-        final float aspectRatio = (float) painted.getWidth() / painted.getHeight();
         int hr = originalOutlineBitmap.getHeight();
-        int wr = (int) (hr * aspectRatio);
-        if (wr > originalOutlineBitmap.getWidth()) {
-            wr = originalOutlineBitmap.getWidth();
-            hr = (int) (wr / aspectRatio);
-        }
+        int wr = originalOutlineBitmap.getWidth();
         int nr = wr * hr;
         Bitmap result = Bitmap.createBitmap(wr, hr, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(result);
@@ -150,6 +142,7 @@ public class PaintMapView extends View {
             file.getParentFile().mkdirs();
             int[] pixels = new int[nr];
             result.getPixels(pixels, 0, wr, 0, 0, wr, hr);
+            DrawUtils.save2JPEG(result, file.getAbsolutePath().replaceAll(".pgm", ".jpg"));
             if (LrNativeApi.writeBitmapToPgm(file.getAbsolutePath(), pixels, wr, hr)) {
                 Progress.sendIncrementProgress(progressHandler, PROGRESS_SAVE);
             }else{

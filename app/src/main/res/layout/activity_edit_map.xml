@@ -102,6 +102,7 @@
             android:background="@drawable/ic_bg"
             android:onClick="onClickClearGray"
             android:text="清轨迹"
+            android:visibility="invisible"
             android:textColor="#fff"
             android:textSize="10sp" />
     </LinearLayout>
@@ -124,6 +125,7 @@
         <info.hoang8f.widget.FButton
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:visibility="gone"
             android:text="完成编辑"
             android:textColor="#fff"
             android:textSize="14sp"
@@ -139,7 +141,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:onClick="onClickSave"
-            android:text="保存地图"
+            android:text="保存退出"
             android:textColor="#fff"
             android:textSize="14sp"
             fbutton:buttonColor="@color/fbutton_color_emerald"
@@ -154,7 +156,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:onClick="onClickExit"
-            android:text="放弃返回"
+            android:text="放弃编辑"
             android:textColor="#fff"
             android:textSize="14sp"
             fbutton:buttonColor="@color/fbutton_color_wet_asphalt"

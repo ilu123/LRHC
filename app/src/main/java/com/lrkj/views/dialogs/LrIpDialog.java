@@ -43,7 +43,7 @@ public class LrIpDialog extends DialogFragment {
     Button btnConnect;
 
     private static final int BG_PRIO = android.os.Process.THREAD_PRIORITY_BACKGROUND;
-    private static final int RUNNABLE_DELAY_MS = 2000;
+    private static final int RUNNABLE_DELAY_MS = 6000;
 
 
     @Override
@@ -129,6 +129,13 @@ public class LrIpDialog extends DialogFragment {
 
             try {
                 int result = LrRobot.sendCommand(mIp, LrDefines.Cmds.CMD_RESET_SYSTEM, null) ? 100 : -100;
+                if (result == 100) {
+                    try {
+                        Thread.sleep(4000);
+                    }catch (Throwable e){
+                        e.printStackTrace();
+                    }
+                }
                 this.mHandler.sendEmptyMessageDelayed(result, RUNNABLE_DELAY_MS);
                 this.mHandler = null;
             } catch (Exception e) {

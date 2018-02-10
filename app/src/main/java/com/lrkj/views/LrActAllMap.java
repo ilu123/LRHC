@@ -97,7 +97,6 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
                     final File f = mFiles.get(position);
                     new MyRxDialog(LrActAllMap.this)
                             .setTitle("选择操作")
-                            .setPositiveText("上传")
                             .setNegativeText("编辑")
                             .setNeutralText("删除地图")
                             .dialogToObservable()
@@ -165,6 +164,10 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
     public void onResume() {
         super.onResume();
         LrApplication.mkMapFolder();
+
+        if (!mIsNavi) {
+            updateSceneList();
+        }
     }
 
     public void onClickReload(View v) {
@@ -429,32 +432,7 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
                     LrToast.toast("地图不存在！");
                 }
             } else if (t[0].equalsIgnoreCase("upload")) {
-                final String mapPath = f.getAbsolutePath().replaceAll(".jpg", ".pgm");
-                final String mapName = f.getName().replaceAll(".jpg", "");
-                LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
-                        .setMessage("上传中...")
-                        .setCancelable(false)
-                        .setCancelOutside(false);
-                final LoadingDailog dialog = loadBuilder.create();
-                dialog.show();
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        final int result = LrNativeApi.sendEditMap(mapName, mapPath);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                dialog.dismiss();
-                                if (result == 1) {
-                                    LrToast.toast("上传成功！");
-                                } else {
-                                    LrToast.toast("上传失败！");
-                                }
-                            }
-                        });
-                    }
-                }).start();
             } else if (t[0].equalsIgnoreCase("nav")) {
                 Intent i = new Intent(this, LrActNavi.class);
                 i.putExtra("map", f.getName().replaceAll(".jpg", ""));

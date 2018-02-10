@@ -34,6 +34,7 @@ public class JoystickHVView extends View implements Runnable {
     private OnJoystickMoveListener onJoystickMoveListener; // Listener
     private Thread thread = new Thread(this);
     private long loopInterval = DEFAULT_LOOP_INTERVAL;
+    private volatile boolean mStopMove = false;
     private int xPosition = 0; // Touch x position
     private int yPosition = 0; // Touch y position
     private double centerX = 0; // Center view x position
@@ -165,15 +166,17 @@ public class JoystickHVView extends View implements Runnable {
                 yPosition = (int) ((yPosition - centerY) * joystickRadius / abs + centerY);
         }
         invalidate();
-        if (event.getAction() == MotionEvent.ACTION_UP) {
+        if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
             xPosition = (int) centerX;
             yPosition = (int) centerY;
+            mStopMove = true;
             thread.interrupt();
             try {
                 thread.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            thread = null;
             if (onJoystickMoveListener != null)
                 onJoystickMoveListener.onValueChanged(getAngle(), getPower(),
                         getDirection(), true);
@@ -184,6 +187,7 @@ public class JoystickHVView extends View implements Runnable {
                 thread.interrupt();
             }
             thread = new Thread(this);
+            mStopMove = false;
             thread.start();
             if (onJoystickMoveListener != null)
                 onJoystickMoveListener.onValueChanged(getAngle(), getPower(),
@@ -269,12 +273,12 @@ public class JoystickHVView extends View implements Runnable {
 
     @Override
     public void run() {
-        while (!Thread.interrupted()) {
+        while (!Thread.interrupted() && thread != null && !mStopMove) {
             post(new Runnable() {
                 public void run() {
-                    if (onJoystickMoveListener != null)
+                    if (onJoystickMoveListener != null && thread != null)
                         onJoystickMoveListener.onValueChanged(getAngle(),
-                                getPower(), getDirection(), false);
+                                getPower(), getDirection(), mStopMove);
                 }
             });
             try {

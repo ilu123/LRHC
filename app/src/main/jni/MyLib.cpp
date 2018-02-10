@@ -343,60 +343,67 @@ JNIEXPORT jboolean JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getLaserFrame
     cv::Mat pc;
     float orix, oriy;
     int pw, ph;
-    int SocketGetMap = createSocket(ServerIP, 4103);
+
+    int SocketGetMap = createSocket(ServerIP, 4101);
     if (SocketGetMap < 0)
         return 0;
-    if (sendSignal(SocketGetMap, 1006)) {
+    if (sendSignal(SocketGetMap, 2016)) {
+        bool mapExist = false;
+        int bytes = -1;
 
-        int i = recvSignal(SocketGetMap);
-
-        if (i != -1) {
-            if (i == 0) {
-                std::cout << "getMap fail" << std::endl;
-            } else if (i == 1) {
-                orix = recvFloat(SocketGetMap);
-                if (orix < -10000) {
-                    std::cout << "recv float error " << std::endl;
-                    return 0;
-                }
-
-
-                oriy = recvFloat(SocketGetMap);
-                if (oriy < -10000) {
-                    std::cout << "recv float error " << std::endl;
-                    return 0;
-                }
-
-                int width = recvSignal(SocketGetMap);
-                if (width == -1) {
-                    std::cout << "recv  error " << std::endl;
-                    return 0;
-                }
-
-
-                int height = recvSignal(SocketGetMap);
-                if (height == -1) {
-                    std::cout << "recv  error " << std::endl;
-                    return 0;
-                }
-
-                std::cout << " orix: " << orix << " y: " << oriy << " w:" << width << " h: "
-                          << height << std::endl;
-
-                pc = cv::Mat::zeros(height, width, CV_8UC1);
-                int imgSize = pc.total() * pc.elemSize();
-                uchar *iptr = pc.data;
-
-                if (recv(SocketGetMap, iptr, imgSize, MSG_WAITALL) <= 0) {
-                    std::cerr << "recv failed" << std::endl;
-                    return 0;
-                }
-                pw = width;
-                ph = height;
-                //cv::imwrite ( "theMap.pgm" , dotMap ) ;
-            }
+        // send the size of  mapName ; 发送地图名称在所占字节个数
+        int mapNameLen = strlen(mapName);
+        if ((bytes = send(SocketGetMap, &mapNameLen, sizeof(mapNameLen), 0)) <= 0) {
+            return 0;
         }
+
+        // send the name of the map  发送地图名称
+        if ((bytes = send(SocketGetMap, mapName, mapNameLen, 0)) <= 0) {
+            return 0;
+        }
+
+        //recieve ack information
+        //获取反馈信息
+        if ((bytes = recv(SocketGetMap, &mapExist, sizeof(mapExist), 0)) <= 0) {
+            std::cerr << "bytes = " << bytes << std::endl;
+            return 0;
+        }
+
+
+        if (mapExist) {
+            //获取地图宽度
+            int mapWidth = 0;    // width of the map
+            if ((bytes = recv(SocketGetMap, &mapWidth, sizeof(mapWidth), MSG_WAITALL)) <= 0) {
+                std::cerr << "bytes = " << bytes << std::endl;
+                return 0;
+            }
+
+            //获取地图高度
+            int mapHeight = 0;    // height of the map
+            if ((bytes = recv(SocketGetMap, &mapHeight, sizeof(mapHeight), MSG_WAITALL)) <= 0) {
+                return 0;
+            }
+
+            //制作地图容器
+            cv::Mat img;  // image container
+            img = cv::Mat::zeros(mapHeight, mapWidth,
+                                 CV_8UC1);    // CV_8UC1 means that each pixels in the image is type unsigned char
+            int imgSize = img.total() * img.elemSize();
+            uchar *iptr = img.data;
+
+            //获取地图数据本身
+            if ((bytes = recv(SocketGetMap, iptr, imgSize, MSG_WAITALL)) <= 0) {
+                return 0;
+            }
+
+            pw = mapWidth;
+            ph = mapHeight;
+            pc = img;
+        }
+    }else{
+        return 0;
     }
+
     cv::Mat white = cv::Mat(ph, pw, CV_8UC1, cv::Scalar(255));
     pc = white - pc; //图像反向， 黑->白 ， 白->黑
 
@@ -502,7 +509,7 @@ JNIEXPORT jboolean JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getLaserFrame
         if (Save_Laser) {
             //保存到本地
             cv::imwrite(string("/mnt/sdcard/com.lrkj.ctrl/maps/") + string(mapName) + ".pgm",
-                        finalMap - trajectory);
+                        finalMap);
             cv::imwrite(string("/mnt/sdcard/com.lrkj.ctrl/maps/") + string(mapName) + ".jpg",
                         img);
             std::cout << "save map done!!!!" << std::endl;

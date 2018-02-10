@@ -324,8 +324,13 @@ public class LrActMakeMap extends LrBaseAct implements LrSocketBridgeViewBase.Cv
                     if (!mStopThread && 2 == mStatus)
                         ok = LrRobot.sendCmd(mRobotIp, LrDefines.PORT_READ_VIDEO, c, null);
                 }else{
-                    if (!mStopThread && 2 == mStatus)
-                        ok = LrRobot.sendCmd(mRobotIp, LrDefines.PORT_READ_VIDEO, c, null);
+                    if (c == LrDefines.Cmds.CMD_MAP_RESET) {
+                        if (!mStopThread)
+                            ok = LrRobot.sendCmd(mRobotIp, LrDefines.PORT_READ_VIDEO, c, null);
+                    }else {
+                        if (!mStopThread && 2 == mStatus)
+                            ok = LrRobot.sendCmd(mRobotIp, LrDefines.PORT_READ_VIDEO, c, null);
+                    }
                 }
                 final String msg = ok ? "命令已发送" : "命令发送失败";
                 if (mHandlerCmd == null)

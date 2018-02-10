@@ -32,10 +32,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.android.tu.loadingdialog.LoadingDailog;
 import com.dornbachs.zebra.TGApplication;
 import com.dornbachs.zebra.modal.ImageItem;
+import com.dornbachs.zebra.utils.DrawUtils;
 import com.dornbachs.zebra.utils.Progress;
+import com.lrkj.business.LrNativeApi;
 import com.lrkj.ctrl.R;
+import com.lrkj.utils.LrToast;
 import com.lrkj.utils.PGM;
 import com.lrkj.widget.PaintMapView;
 import com.lrkj.widget.SeekDialog;
@@ -96,6 +100,13 @@ public class LrActEditMap extends LrBaseAct implements PaintMapView.LifecycleLis
             item.outlinePath = mImagePath;
             new InitPaintView(item);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        LrToast.showLoading(this, "地图加载中...");
     }
 
     /**
@@ -286,7 +297,7 @@ public class LrActEditMap extends LrBaseAct implements PaintMapView.LifecycleLis
             // Make the progress bar visible and hide the view
             _paintView.setVisibility(View.GONE);
             _progressBar.setProgress(0);
-            _progressBar.setVisibility(View.VISIBLE);
+            _progressBar.setVisibility(View.GONE);
             _state._savedImageUri = null;
             _state._loadInProgress = true;
             _state._imageItem = item;
@@ -306,6 +317,7 @@ public class LrActEditMap extends LrBaseAct implements PaintMapView.LifecycleLis
                             lp.width = w;
                             lp.height = h;
                             _paintView.setLayoutParams(lp);
+                            LrToast.stopLoading();
                         case Progress.MESSAGE_DONE_ERROR:
                             // We are done, hide the progress bar and turn
                             // the paint view back on.
@@ -368,10 +380,37 @@ public class LrActEditMap extends LrBaseAct implements PaintMapView.LifecycleLis
                         case Progress.MESSAGE_DONE_OK:
                         case Progress.MESSAGE_DONE_ERROR:
                             String title = "保存中...";
-                            if (m.what == Progress.MESSAGE_DONE_OK)
-                                title += "保存成功！";
+                            if (m.what == Progress.MESSAGE_DONE_OK) {
+                                final String mapPath = mImagePath;
+                                final String mapName = new File(mapPath.replaceAll(".pgm", "")).getName();
+                                LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(LrActEditMap.this)
+                                        .setMessage("保存中...")
+                                        .setCancelable(false)
+                                        .setCancelOutside(false);
+                                final LoadingDailog dialog = loadBuilder.create();
+                                dialog.show();
+
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        final int result = LrNativeApi.sendEditMap(mapName, mapPath);
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                dialog.dismiss();
+                                                if (result == 1) {
+                                                    LrToast.toast("保存成功！");
+                                                    LrActEditMap.this.finish();
+                                                } else {
+                                                    LrToast.toast("保存失败！");
+                                                }
+                                            }
+                                        });
+                                    }
+                                }).start();
+                            }
                             else
-                                title += "保存失败！";
+                                title = "保存失败！";
                             _progressDialog.setTitle(title);
                             new DelayHandler().sendEmptyMessageDelayed(0, SAVE_DIALOG_WAIT_MILLIS);
                             break;
