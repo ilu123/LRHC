@@ -71,7 +71,7 @@
             android:layout_margin="10dp"
             android:background="@null"
             android:onClick="onClickPan"
-            android:src="@drawable/ic_move" />
+            android:src="@drawable/ic_move2" />
 
         <ImageButton
             android:layout_width="40dp"

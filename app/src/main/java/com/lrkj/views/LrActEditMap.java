@@ -233,13 +233,13 @@ public class LrActEditMap extends LrBaseAct implements PaintMapView.LifecycleLis
     }
 
     public void onClickPan(View v) {
-        v.setSelected(!v.isSelected());
-        if (v.isSelected()) {
+        boolean a = !_paintView.isPan();
+        if (a) {
             ((ImageButton)v).setImageResource(R.drawable.ic_move);
         }else{
             ((ImageButton)v).setImageResource(R.drawable.ic_move2);
         }
-        _paintView.setIsPan(v.isSelected());
+        _paintView.setIsPan(a);
     }
 
     public void onClickLock(View v) {

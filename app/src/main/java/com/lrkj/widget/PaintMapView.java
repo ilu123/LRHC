@@ -70,6 +70,8 @@ public class PaintMapView extends View {
         _isPan = pan;
     }
 
+    public boolean isPan(){return _isPan;}
+
     public void loadFromBitmap(Bitmap originalOutlineBitmap, int ow, int oh, Handler progressHandler) {
         Log.e("size", "size = {" + ow + ", " + oh + "}");
 

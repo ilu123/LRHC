@@ -520,6 +520,7 @@ JNIEXPORT jboolean JNICALL Java_com_lrkj_utils_LrSocketSurfaceView_getLaserFrame
 
         if (Reset_Laser) {
             lasermap.setTo ( cv::Scalar ( 0)  ) ;
+            trajectory.setTo ( cv::Scalar ( 0)  ) ;
             Reset_Laser = false;
         }
 

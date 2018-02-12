@@ -1,5 +1,5 @@
 **/*/*.iml
-.idea
+.idea/*
 .gradle
 local.properties
 **/*/gradle
@@ -8,5 +8,6 @@ local.properties
 **/*/.idea/libraries
 **/*/.DS_Store
 **/*/build
+**/*/build/*
 **/*/captures
 */*.externalNativeBuild

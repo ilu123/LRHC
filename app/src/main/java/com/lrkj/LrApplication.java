@@ -67,7 +67,7 @@ public class LrApplication extends TGApplication {
 
     public static int getSpeed() {
         SharedPreferences sp = LrApplication.sApplication.getSharedPreferences("robot",0);
-        return sp.getInt("speed", 1);
+        return sp.getInt("speed", 3);
     }
 
     public static void saveSpeed(int s) {
