@@ -37,11 +37,10 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
     ListView mListView;
 
     String Prex = "/mnt/sdcard/com.lrkj.ctrl/";
-    final String PrexF = "/mnt/sdcard/com.lrkj.ctrl/";
 
     ArrayList<File> mFiles = new ArrayList<>();
     String mIp = null;
-    boolean mIsNavi = false;
+    volatile boolean mIsNavi = false;
     boolean mSortAsc = true;
 
     @Override
@@ -54,6 +53,7 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
         mIp = getIntent().getStringExtra("ip");
         mIsNavi = getIntent().getBooleanExtra("navi", false);
         Prex += (mIsNavi ? "navi/" : "maps/");
+        findViewById(R.id.btnDelAll).setVisibility(mIsNavi ? View.INVISIBLE : View.VISIBLE);
         ((TextView) findViewById(R.id.tvTitle)).setText(mIsNavi ? "地图导航" : "地图管理");
         mListView = (ListView) findViewById(android.R.id.list);
         mListView.setAdapter(this);

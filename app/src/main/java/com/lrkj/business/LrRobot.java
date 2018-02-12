@@ -164,6 +164,14 @@ public class LrRobot {
             }
             System.gc();
         }
+        // Delay for "-u"
+        if (c == LrDefines.Cmds.CMD_RESET_SYSTEM) {
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+
+            }
+        }
         return ok;
     }
 

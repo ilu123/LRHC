@@ -386,7 +386,7 @@ public class LrActMakeMap extends LrBaseAct implements LrSocketBridgeViewBase.Cv
                 if (mCameraDot != null)
                     mCameraDot.disableView();
 
-                LrToast.showLoading(this, "关闭中...");
+                LrToast.showLoading(this, "正在退出建图...");
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
