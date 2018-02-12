@@ -19,6 +19,7 @@ public class LrBaseAct extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        LrApplication.mkMapFolder();
         LrNativeApi.loadLibrary();
         LrApplication.sApplication.sActivity = this;
     }

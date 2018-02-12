@@ -299,7 +299,7 @@ public class LrActMakeMap extends LrBaseAct implements LrSocketBridgeViewBase.Cv
     }
 
     private void sendCmd(final int c) {
-        LrToast.showLoading(this, "发送命令...");
+        LrToast.showLoading(this, c ==  LrDefines.Cmds.CMD_MAP_LASER ? "地图加载中" : "发送命令...");
         new Thread(new Runnable() {
             @Override
             public void run() {
