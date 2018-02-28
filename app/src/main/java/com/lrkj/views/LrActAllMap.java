@@ -32,6 +32,8 @@ import java.util.Date;
 
 import io.reactivex.functions.Consumer;
 
+import static android.R.attr.id;
+
 public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickListener {
 
     ListView mListView;
@@ -42,6 +44,7 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
     String mIp = null;
     volatile boolean mIsNavi = false;
     boolean mSortAsc = true;
+    boolean mInitList = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,7 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
         mIsNavi = getIntent().getBooleanExtra("navi", false);
         Prex += (mIsNavi ? "navi/" : "maps/");
         findViewById(R.id.btnDelAll).setVisibility(mIsNavi ? View.INVISIBLE : View.VISIBLE);
+        findViewById(R.id.time).setVisibility(mIsNavi ? View.GONE : View.VISIBLE);
         ((TextView) findViewById(R.id.tvTitle)).setText(mIsNavi ? "地图导航" : "地图管理");
         mListView = (ListView) findViewById(android.R.id.list);
         mListView.setAdapter(this);
@@ -213,6 +217,11 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
                             mFiles.add(f);
                         }
                     }
+                if (mInitList) {
+                    mInitList = false;
+                    mSortAsc = false;
+                    Collections.sort(mFiles, new FileSortComparator("time", mSortAsc));
+                }
                 notifyDataSetChanged();
             }
         });
@@ -347,6 +356,7 @@ public class LrActAllMap extends LrBaseAct implements ListAdapter, View.OnClickL
         name.setText(f.getName().replaceAll(".jpg", ""));
         time.setText(df.format(new Date(lastTime)));
 
+        if (mIsNavi) time.setVisibility(View.GONE);
 
         View v = convertView.findViewById(R.id.btn_del);
         v.setTag("del-" + position);
