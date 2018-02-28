@@ -85,6 +85,7 @@ public class LrActSystem extends LrBaseAct {
         switch (v.getId()) {
             case R.id.btn_shutdown:
                 sendCmd(LrDefines.Cmds.CMD_SHUTDOWN);
+                break;
             case R.id.btn_reboot:
                 sendCmd(LrDefines.Cmds.CMD_REBOOT);
                 break;
